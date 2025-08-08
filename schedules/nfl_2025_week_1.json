@@ -1,0 +1,657 @@
+[
+  {
+    "id": "56779053-89da-4939-bc22-9669ae1fe05a",
+    "status": "scheduled",
+    "scheduled": "2025-09-05T00:20:00+00:00",
+    "entry_mode": "LDE",
+    "sr_id": "sr:match:60525453",
+    "venue": {
+      "id": "4fa8c29c-6626-464c-8540-314ed7535e1b",
+      "name": "Lincoln Financial Field",
+      "city": "Philadelphia",
+      "state": "PA",
+      "country": "USA",
+      "zip": "19148",
+      "address": "1020 Pattison Avenue",
+      "capacity": 69596,
+      "surface": "turf",
+      "roof_type": "outdoor",
+      "sr_id": "sr:venue:1833",
+      "location": {
+        "lat": "39.900872",
+        "lng": "-75.167311"
+      }
+    },
+    "home": {
+      "id": "386bdbf9-9eea-4869-bb9a-274b0bc66e80",
+      "name": "Philadelphia Eagles",
+      "alias": "PHI",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4428"
+    },
+    "away": {
+      "id": "e627eec7-bbae-4fa4-8e73-8e1d6bc5c060",
+      "name": "Dallas Cowboys",
+      "alias": "DAL",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4392"
+    },
+    "broadcast": {
+      "network": "NBC"
+    }
+  },
+  {
+    "id": "f895a349-36ec-4b9a-b7a3-7830ea95f07a",
+    "status": "scheduled",
+    "scheduled": "2025-09-06T00:00:00+00:00",
+    "entry_mode": "LDE",
+    "sr_id": "sr:match:60574639",
+    "venue": {
+      "id": "c2f0d6c0-f772-11ee-a79f-5fe93d39f1bd",
+      "name": "Corinthians Arena",
+      "city": "Sao Paulo",
+      "country": "BRA",
+      "zip": "08295-005",
+      "address": "Av. Miguel Ign\u00e1cio Curi, 111",
+      "capacity": 49205,
+      "surface": "turf",
+      "roof_type": "outdoor",
+      "sr_id": "sr:venue:13318",
+      "location": {
+        "lat": "-23.546100",
+        "lng": "-46.472440"
+      }
+    },
+    "home": {
+      "id": "1f6dcffb-9823-43cd-9ff4-e7a8466749b5",
+      "name": "Los Angeles Chargers",
+      "alias": "LAC",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4429"
+    },
+    "away": {
+      "id": "6680d28d-d4d2-49f6-aace-5292d3ec02c2",
+      "name": "Kansas City Chiefs",
+      "alias": "KC",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4422"
+    },
+    "broadcast": {
+      "network": "YouTube"
+    }
+  },
+  {
+    "id": "0ab5e37d-0f79-40c6-b536-ff88c7be5286",
+    "status": "scheduled",
+    "scheduled": "2025-09-07T17:00:00+00:00",
+    "entry_mode": "LDE",
+    "sr_id": "sr:match:60574745",
+    "venue": {
+      "id": "1f2d393b-2291-4835-a412-0714966ea245",
+      "name": "Mercedes-Benz Stadium",
+      "city": "Atlanta",
+      "state": "GA",
+      "country": "USA",
+      "zip": "30313",
+      "address": "441 Martin Luther King Jr Drive NW",
+      "capacity": 71000,
+      "surface": "artificial",
+      "roof_type": "retractable_dome",
+      "sr_id": "sr:venue:20343",
+      "location": {
+        "lat": "33.757368",
+        "lng": "-84.401008"
+      }
+    },
+    "home": {
+      "id": "e6aa13a4-0055-48a9-bc41-be28dc106929",
+      "name": "Atlanta Falcons",
+      "alias": "ATL",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4393"
+    },
+    "away": {
+      "id": "4254d319-1bc7-4f81-b4ab-b5e6f3402b69",
+      "name": "Tampa Bay Buccaneers",
+      "alias": "TB",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4388"
+    },
+    "broadcast": {
+      "network": "FOX"
+    }
+  },
+  {
+    "id": "56ae5686-bcc1-41a5-8988-66c3c7741a05",
+    "status": "scheduled",
+    "scheduled": "2025-09-07T17:00:00+00:00",
+    "entry_mode": "LDE",
+    "sr_id": "sr:match:60574787",
+    "venue": {
+      "id": "5d4c85c7-d84e-4e10-bd6a-8a15ebecca5c",
+      "name": "MetLife Stadium",
+      "city": "East Rutherford",
+      "state": "NJ",
+      "country": "USA",
+      "zip": "07073",
+      "address": "One MetLife Stadium Drive",
+      "capacity": 82500,
+      "surface": "artificial",
+      "roof_type": "outdoor",
+      "sr_id": "sr:venue:1981",
+      "location": {
+        "lat": "40.813611",
+        "lng": "-74.074444"
+      }
+    },
+    "home": {
+      "id": "5fee86ae-74ab-4bdd-8416-42a9dd9964f3",
+      "name": "New York Jets",
+      "alias": "NYJ",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4427"
+    },
+    "away": {
+      "id": "cb2f9f1f-ac67-424e-9e72-1475cb0ed398",
+      "name": "Pittsburgh Steelers",
+      "alias": "PIT",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4345"
+    },
+    "broadcast": {
+      "network": "CBS"
+    }
+  },
+  {
+    "id": "5894a475-84a9-4aa1-b505-e72281da8b1d",
+    "status": "scheduled",
+    "scheduled": "2025-09-07T17:00:00+00:00",
+    "entry_mode": "LDE",
+    "sr_id": "sr:match:60574783",
+    "venue": {
+      "id": "6ed18563-53e0-46c2-a91d-12d73a16456d",
+      "name": "Lucas Oil Stadium",
+      "city": "Indianapolis",
+      "state": "IN",
+      "country": "USA",
+      "zip": "46225",
+      "address": "500 South Capitol Avenue",
+      "capacity": 67000,
+      "surface": "artificial",
+      "roof_type": "retractable_dome",
+      "sr_id": "sr:venue:8185",
+      "location": {
+        "lat": "39.760008",
+        "lng": "-86.163906"
+      }
+    },
+    "home": {
+      "id": "82cf9565-6eb9-4f01-bdbd-5aa0d472fcd9",
+      "name": "Indianapolis Colts",
+      "alias": "IND",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4421"
+    },
+    "away": {
+      "id": "4809ecb0-abd3-451d-9c4a-92a90b83ca06",
+      "name": "Miami Dolphins",
+      "alias": "MIA",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4287"
+    },
+    "broadcast": {
+      "network": "CBS"
+    }
+  },
+  {
+    "id": "5a6e288f-ccbd-48ab-b476-0b019e93255d",
+    "status": "scheduled",
+    "scheduled": "2025-09-07T17:00:00+00:00",
+    "entry_mode": "LDE",
+    "sr_id": "sr:match:60574775",
+    "venue": {
+      "id": "4c5c036d-dd3d-4183-b595-71a43a97560f",
+      "name": "EverBank Stadium",
+      "city": "Jacksonville",
+      "state": "FL",
+      "country": "USA",
+      "zip": "32202",
+      "address": "One EverBank Field Drive",
+      "capacity": 67814,
+      "surface": "turf",
+      "roof_type": "outdoor",
+      "sr_id": "sr:venue:8187",
+      "location": {
+        "lat": "30.324027",
+        "lng": "-81.637239"
+      }
+    },
+    "home": {
+      "id": "f7ddd7fa-0bae-4f90-bc8e-669e4d6cf2de",
+      "name": "Jacksonville Jaguars",
+      "alias": "JAC",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4386"
+    },
+    "away": {
+      "id": "f14bf5cc-9a82-4a38-bc15-d39f75ed5314",
+      "name": "Carolina Panthers",
+      "alias": "CAR",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4415"
+    },
+    "broadcast": {
+      "network": "FOX"
+    }
+  },
+  {
+    "id": "a01d03e0-c8aa-43df-ae79-c69f8ae53365",
+    "status": "scheduled",
+    "scheduled": "2025-09-07T17:00:00+00:00",
+    "entry_mode": "LDE",
+    "sr_id": "sr:match:60574759",
+    "venue": {
+      "id": "7c11bb2d-4a53-4842-b842-0f1c63ed78e9",
+      "name": "Northwest Stadium",
+      "city": "Landover",
+      "state": "MD",
+      "country": "USA",
+      "zip": "20785",
+      "address": "1600 FedEx Way",
+      "capacity": 67617,
+      "surface": "turf",
+      "roof_type": "outdoor",
+      "sr_id": "sr:venue:6652",
+      "location": {
+        "lat": "38.907724",
+        "lng": "-76.864613"
+      }
+    },
+    "home": {
+      "id": "22052ff7-c065-42ee-bc8f-c4691c50e624",
+      "name": "Washington Commanders",
+      "alias": "WAS",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4432"
+    },
+    "away": {
+      "id": "04aa1c9d-66da-489d-b16a-1dee3f2eec4d",
+      "name": "New York Giants",
+      "alias": "NYG",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4426"
+    },
+    "broadcast": {
+      "network": "FOX"
+    }
+  },
+  {
+    "id": "a2fe3756-470f-49f4-ae92-df63ba01ce26",
+    "status": "scheduled",
+    "scheduled": "2025-09-07T17:00:00+00:00",
+    "entry_mode": "LDE",
+    "sr_id": "sr:match:60574711",
+    "venue": {
+      "id": "3c85d89a-ec66-4983-acd5-1381d6c8673a",
+      "name": "Caesars Superdome",
+      "city": "New Orleans",
+      "state": "LA",
+      "country": "USA",
+      "zip": "70112",
+      "address": "1500 Sugar Bowl Drive",
+      "capacity": 73208,
+      "surface": "artificial",
+      "roof_type": "dome",
+      "sr_id": "sr:venue:8195",
+      "location": {
+        "lat": "29.950928",
+        "lng": "-90.080876"
+      }
+    },
+    "home": {
+      "id": "0d855753-ea21-4953-89f9-0e20aff9eb73",
+      "name": "New Orleans Saints",
+      "alias": "NO",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4425"
+    },
+    "away": {
+      "id": "de760528-1dc0-416a-a978-b510d20692ff",
+      "name": "Arizona Cardinals",
+      "alias": "ARI",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4412"
+    },
+    "broadcast": {
+      "network": "CBS"
+    }
+  },
+  {
+    "id": "d42c74e9-0e0f-4177-a842-cdb6877068cf",
+    "status": "scheduled",
+    "scheduled": "2025-09-07T17:00:00+00:00",
+    "entry_mode": "LDE",
+    "sr_id": "sr:match:60574733",
+    "venue": {
+      "id": "90c38d91-3774-4f5d-82ca-1c806828219f",
+      "name": "Huntington Bank Field",
+      "city": "Cleveland",
+      "state": "OH",
+      "country": "USA",
+      "zip": "44114",
+      "address": "100 Alfred Lerner Way",
+      "capacity": 67895,
+      "surface": "turf",
+      "roof_type": "outdoor",
+      "sr_id": "sr:venue:8177",
+      "location": {
+        "lat": "41.506054",
+        "lng": "-81.700004"
+      }
+    },
+    "home": {
+      "id": "d5a2eb42-8065-4174-ab79-0a6fa820e35e",
+      "name": "Cleveland Browns",
+      "alias": "CLE",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4417"
+    },
+    "away": {
+      "id": "ad4ae08f-d808-42d5-a1e6-e9bc4e34d123",
+      "name": "Cincinnati Bengals",
+      "alias": "CIN",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4416"
+    },
+    "broadcast": {
+      "network": "FOX"
+    }
+  },
+  {
+    "id": "ea3242f9-4081-413f-8bd9-a455f34c4934",
+    "status": "scheduled",
+    "scheduled": "2025-09-07T17:00:00+00:00",
+    "entry_mode": "LDE",
+    "sr_id": "sr:match:60574743",
+    "venue": {
+      "id": "e43310b1-cb82-4df9-8be5-e9b39637031b",
+      "name": "Gillette Stadium",
+      "city": "Foxborough",
+      "state": "MA",
+      "country": "USA",
+      "zip": "02035",
+      "address": "One Patriot Place",
+      "capacity": 66829,
+      "surface": "artificial",
+      "roof_type": "outdoor",
+      "sr_id": "sr:venue:2379",
+      "location": {
+        "lat": "42.090944",
+        "lng": "-71.264344"
+      }
+    },
+    "home": {
+      "id": "97354895-8c77-4fd4-a860-32e62ea7382a",
+      "name": "New England Patriots",
+      "alias": "NE",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4424"
+    },
+    "away": {
+      "id": "7d4fcc64-9cb5-4d1b-8e75-8a906d1e1576",
+      "name": "Las Vegas Raiders",
+      "alias": "LV",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4390"
+    },
+    "broadcast": {
+      "network": "CBS"
+    }
+  },
+  {
+    "id": "2d7adfde-4e24-4d5f-aa42-6f0da8b41e06",
+    "status": "scheduled",
+    "scheduled": "2025-09-07T20:05:00+00:00",
+    "entry_mode": "LDE",
+    "sr_id": "sr:match:60574717",
+    "venue": {
+      "id": "c6b9e5df-c9e4-434c-b3e6-83928f11cbda",
+      "name": "Lumen Field",
+      "city": "Seattle",
+      "state": "WA",
+      "country": "USA",
+      "zip": "98134",
+      "address": "800 Occidental Avenue South",
+      "capacity": 68740,
+      "surface": "artificial",
+      "roof_type": "outdoor",
+      "sr_id": "sr:venue:2291",
+      "location": {
+        "lat": "47.595165",
+        "lng": "-122.331650"
+      }
+    },
+    "home": {
+      "id": "3d08af9e-c767-4f88-a7dc-b920c6d2b4a8",
+      "name": "Seattle Seahawks",
+      "alias": "SEA",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4430"
+    },
+    "away": {
+      "id": "f0e724b0-4cbf-495a-be47-013907608da9",
+      "name": "San Francisco 49ers",
+      "alias": "SF",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4389"
+    },
+    "broadcast": {
+      "network": "FOX"
+    }
+  },
+  {
+    "id": "966ccd2b-5eb5-4780-9e27-720897b6c815",
+    "status": "scheduled",
+    "scheduled": "2025-09-07T20:05:00+00:00",
+    "entry_mode": "LDE",
+    "sr_id": "sr:match:60574715",
+    "venue": {
+      "id": "6589e61d-ef1e-4e30-91b5-9acd2072b8a0",
+      "name": "Empower Field at Mile High",
+      "city": "Denver",
+      "state": "CO",
+      "country": "USA",
+      "zip": "80204",
+      "address": "1701 Mile High Stadium Circle",
+      "capacity": 76125,
+      "surface": "turf",
+      "roof_type": "outdoor",
+      "sr_id": "sr:venue:8179",
+      "location": {
+        "lat": "39.743865",
+        "lng": "-105.020158"
+      }
+    },
+    "home": {
+      "id": "ce92bd47-93d5-4fe9-ada4-0fc681e6caa0",
+      "name": "Denver Broncos",
+      "alias": "DEN",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4418"
+    },
+    "away": {
+      "id": "d26a1ca5-722d-4274-8f97-c92e49c96315",
+      "name": "Tennessee Titans",
+      "alias": "TEN",
+      "game_number": 1,
+      "sr_id": "sr:competitor:367364"
+    },
+    "broadcast": {
+      "network": "FOX"
+    }
+  },
+  {
+    "id": "348ecbd5-411a-4a2d-8596-1fb19ab03188",
+    "status": "scheduled",
+    "scheduled": "2025-09-07T20:25:00+00:00",
+    "entry_mode": "LDE",
+    "sr_id": "sr:match:60574805",
+    "venue": {
+      "id": "5a60dd3a-302c-41c6-ab0f-dd335c1103c2",
+      "name": "Lambeau Field",
+      "city": "Green Bay",
+      "state": "WI",
+      "country": "USA",
+      "zip": "54304",
+      "address": "1265 Lombardi Avenue",
+      "capacity": 81441,
+      "surface": "turf",
+      "roof_type": "outdoor",
+      "sr_id": "sr:venue:8183",
+      "location": {
+        "lat": "44.501357",
+        "lng": "-88.062440"
+      }
+    },
+    "home": {
+      "id": "a20471b4-a8d9-40c7-95ad-90cc30e46932",
+      "name": "Green Bay Packers",
+      "alias": "GB",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4420"
+    },
+    "away": {
+      "id": "c5a59daa-53a7-4de0-851f-fb12be893e9e",
+      "name": "Detroit Lions",
+      "alias": "DET",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4419"
+    },
+    "broadcast": {
+      "network": "CBS"
+    }
+  },
+  {
+    "id": "408d631d-19cd-4f4d-880e-45072408530c",
+    "status": "scheduled",
+    "scheduled": "2025-09-07T20:25:00+00:00",
+    "entry_mode": "LDE",
+    "sr_id": "sr:match:60574739",
+    "venue": {
+      "id": "790c1f04-73c6-4f6f-8b1e-78a62260be90",
+      "name": "SoFi Stadium",
+      "city": "Inglewood",
+      "state": "CA",
+      "country": "USA",
+      "zip": "90301",
+      "address": "1000 S Prairie Ave",
+      "capacity": 70240,
+      "surface": "artificial",
+      "roof_type": "outdoor",
+      "sr_id": "sr:venue:52183",
+      "location": {
+        "lat": "33.953536",
+        "lng": "-118.338734"
+      }
+    },
+    "home": {
+      "id": "2eff2a03-54d4-46ba-890e-2bc3925548f3",
+      "name": "Los Angeles Rams",
+      "alias": "LA",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4387"
+    },
+    "away": {
+      "id": "82d2d380-3834-4938-835f-aec541e5ece7",
+      "name": "Houston Texans",
+      "alias": "HOU",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4324"
+    },
+    "broadcast": {
+      "network": "CBS"
+    }
+  },
+  {
+    "id": "be1ba854-b1c4-46ad-b328-476180fa0279",
+    "status": "scheduled",
+    "scheduled": "2025-09-08T00:20:00+00:00",
+    "entry_mode": "LDE",
+    "sr_id": "sr:match:60574771",
+    "venue": {
+      "id": "e9e0828e-37fc-4238-a317-49037577dd55",
+      "name": "Highmark Stadium",
+      "city": "Orchard Park",
+      "state": "NY",
+      "country": "USA",
+      "zip": "14127",
+      "address": "One Bills Drive",
+      "capacity": 71608,
+      "surface": "artificial",
+      "roof_type": "outdoor",
+      "sr_id": "sr:venue:8171",
+      "location": {
+        "lat": "42.773826",
+        "lng": "-78.786589"
+      }
+    },
+    "home": {
+      "id": "768c92aa-75ff-4a43-bcc0-f2798c2e1724",
+      "name": "Buffalo Bills",
+      "alias": "BUF",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4376"
+    },
+    "away": {
+      "id": "ebd87119-b331-4469-9ea6-d51fe3ce2f1c",
+      "name": "Baltimore Ravens",
+      "alias": "BAL",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4413"
+    },
+    "broadcast": {
+      "network": "NBC"
+    }
+  },
+  {
+    "id": "fbfcee5c-907c-4a1e-a6ab-82adcd624399",
+    "status": "scheduled",
+    "scheduled": "2025-09-09T00:15:00+00:00",
+    "entry_mode": "LDE",
+    "sr_id": "sr:match:60574767",
+    "venue": {
+      "id": "d7866605-5ac6-4b3a-90e8-760cc5a26b75",
+      "name": "Soldier Field",
+      "city": "Chicago",
+      "state": "IL",
+      "country": "USA",
+      "zip": "60605",
+      "address": "1410 South Museum Campus Drive",
+      "capacity": 61500,
+      "surface": "turf",
+      "roof_type": "outdoor",
+      "sr_id": "sr:venue:2109",
+      "location": {
+        "lat": "41.862498",
+        "lng": "-87.616979"
+      }
+    },
+    "home": {
+      "id": "7b112545-38e6-483c-a55c-96cf6ee49cb8",
+      "name": "Chicago Bears",
+      "alias": "CHI",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4391"
+    },
+    "away": {
+      "id": "33405046-04ee-4058-a950-d606f8c30852",
+      "name": "Minnesota Vikings",
+      "alias": "MIN",
+      "game_number": 1,
+      "sr_id": "sr:competitor:4423"
+    },
+    "broadcast": {
+      "network": "ABC/ESPN"
+    }
+  }
+]
