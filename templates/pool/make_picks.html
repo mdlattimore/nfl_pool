@@ -1,0 +1,31 @@
+{% extends '_base.html' %}
+{%  load custom_tags %}
+
+{% block content %}
+
+<h2>Week {{ week }} Picks</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Home</th>
+                <th>Away</th>
+                <th>Your Pick</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for form, game in formset.forms|_zip:games %}
+            <tr>
+                <td>{{ game.home_team.name }}</td>
+                <td>{{ game.away_team.name }}</td>
+                <td>{{ form.picked_team }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <button class="btn btn-primary">Save Picks</button>
+</form>
+
+{% endblock content %}
