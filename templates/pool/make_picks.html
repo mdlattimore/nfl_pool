@@ -4,6 +4,17 @@
 {% block content %}
 
 <h2>Week {{ week }} Picks</h2>
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+            {% if message.tags == 'error'%}
+            <li style="color:red">{{ message }}</li>
+            {% else %}
+            <li style="color:green">{{ message }}</li>
+            {% endif %}
+        {% endfor %}
+      </ul>
+    {% endif %}
 <form method="post">
     {% csrf_token %}
     {{ formset.management_form }}
@@ -25,7 +36,9 @@
         {% endfor %}
         </tbody>
     </table>
-    <button class="btn btn-primary">Save Picks</button>
+
+
+    <button type="submit" class="btn btn-primary">Save Picks</button>
 </form>
 
 {% endblock content %}
