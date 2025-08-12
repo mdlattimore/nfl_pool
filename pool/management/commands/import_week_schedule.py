@@ -35,6 +35,8 @@ class Command(BaseCommand):
                 home_team = Team.objects.get(name=home_name)
                 away_team = Team.objects.get(name=away_name)
                 game_time = parse_datetime(game_time_str)
+                print(
+                    f"Parsed game_time: {game_time}, tzinfo: {game_time.tzinfo}")
 
                 if not game_time:
                     raise ValueError(f"Invalid datetime: {game_time_str}")

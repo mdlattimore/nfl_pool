@@ -10,8 +10,8 @@ urlpatterns = [
          name="account_change_password"),
 
     path("accounts/", include("allauth.urls")),
-    path("", include("pages.urls")),
-    path("pool/", include("pool.urls")),
+    path("", include("pool.urls")),
+    # path("pool/", include("pool.urls")),
 ]
 
 if settings.DEBUG:
