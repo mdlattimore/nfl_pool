@@ -72,6 +72,24 @@ class PickView(LoginRequiredMixin, View):
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'pool/dashboard.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # This week's games
+        current_week = self.get_current_week()
+        context['current_week'] = current_week
+        context['current_week_games'] = Game.objects.filter(week=current_week)
+
+        context['past_picks'] = (
+            Pick.objects.filter(user=self.request.user,
+                                game__game_time__lt=timezone.now())
+        .select_related('game', 'picked_team', 'game__home_team',
+                        'game__away_team', 'game__winner')
+        .order_by('-game__game_time')
+        )
+        return context
+
+
     # --- Helpers ---
     def get_current_week(self):
         now = timezone.now()

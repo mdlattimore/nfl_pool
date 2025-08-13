@@ -1,0 +1,6 @@
+{% for pick in past_picks %}
+    <li class="{% if pick.points_earned > 0 %}text-success{% else %}text-danger{% endif %}">
+        Week {{ pick.game.week }}: {{ pick.game.away_team.name }} @ {{ pick.game.home_team.name }} –
+        You picked {{ pick.picked_team.name }} ({{ pick.points_earned }} points)
+    </li>
+{% endfor %}

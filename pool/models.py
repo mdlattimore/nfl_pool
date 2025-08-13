@@ -22,6 +22,7 @@ class Game(models.Model):
     winner = models.ForeignKey(Team, null=True, blank=True,
                                related_name="winner",
                                on_delete=models.SET_NULL)
+    points = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return f"Week {self.week}: {self.away_team} @ {self.home_team}"
@@ -31,6 +32,7 @@ class Pick(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     picked_team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    points_earned = models.PositiveIntegerField(default=0)
 
     class Meta:
         unique_together = ("user", "game")
