@@ -24,6 +24,46 @@ class Game(models.Model):
                                on_delete=models.SET_NULL)
     points = models.PositiveIntegerField(default=1)
 
+    # def save(self, *args, **kwargs):
+    #     # Keep track of whether winner was just set/changed
+    #     winner_changed = False
+    #     if self.pk:  # existing game
+    #         old = Game.objects.filter(pk=self.pk).first()
+    #         if old and old.winner != self.winner:
+    #             winner_changed = True
+    #
+    #     super().save(*args, **kwargs)  # save the game first
+    #
+    #     # If winner changed, update all related picks
+    #     if self.winner and winner_changed:
+    #         from .models import Pick
+    #         picks = Pick.objects.filter(game=self)
+    #         for pick in picks:
+    #             pick.points_earned = self.points if pick.picked_team == self.winner else 0
+    #             pick.save()
+    def save(self, *args, **kwargs):
+        winner_changed = False
+        if self.pk:  # existing game
+            old = Game.objects.filter(pk=self.pk).first()
+            if old and old.winner != self.winner:
+                winner_changed = True
+
+        super().save(*args, **kwargs)  # save game first
+
+        if winner_changed:
+            from .models import Pick
+
+            if self.winner:
+                # Set correct picks
+                Pick.objects.filter(game=self, picked_team=self.winner).update(
+                    points_earned=self.points)
+                # Set incorrect picks
+                Pick.objects.filter(game=self).exclude(
+                    picked_team=self.winner).update(points_earned=0)
+            else:
+                # Winner cleared — reset all points
+                Pick.objects.filter(game=self).update(points_earned=0)
+
     def __str__(self):
         return f"Week {self.week}: {self.away_team} @ {self.home_team}"
 

@@ -15,7 +15,7 @@ class GameAdmin(admin.ModelAdmin):
 
 @admin.register(Pick)
 class PickAdmin(admin.ModelAdmin):
-    list_display = ("game", "picked_team")
+    list_display = ("game", "picked_team", "user")
 
 @admin.register(Score)
 class ScoreAdmin(admin.ModelAdmin):
