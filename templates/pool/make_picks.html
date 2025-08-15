@@ -31,14 +31,17 @@
             <tr>
                 <td>{{ game.home_team.name }}</td>
                 <td>{{ game.away_team.name }}</td>
-                <td>{{ form.picked_team }}</td>
+                <td>{{ form.picked_team|disable_if_closed:is_pick_open }}</td>
+
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-
+    {% if is_pick_open %}
     <button type="submit" class="btn btn-primary">Save Picks</button>
+{% endif %}
 </form>
+
 
 {% endblock content %}

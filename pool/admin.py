@@ -11,7 +11,7 @@ class TeamAdmin(admin.ModelAdmin):
 
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
-    list_display = ("home_team", "away_team")
+    list_display = ("home_team", "away_team", "week")
 
 @admin.register(Pick)
 class PickAdmin(admin.ModelAdmin):

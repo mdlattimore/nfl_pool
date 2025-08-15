@@ -1,49 +1,45 @@
-from datetime import timedelta
+from datetime import datetime, time, timedelta, timezone as dt_timezone
+import pytz
 from django.utils import timezone
 from django.db.models import Min, Max
-import pytz
 from .models import Game
 
-
 def get_week_info():
-    """
-    Returns a dictionary with:
-        - week: current week number
-        - pick_open: datetime pick window opens
-        - pick_close: datetime pick window closes
-        - is_pick_open: bool
-        - is_pick_closed: bool
-    If no games are found, returns None.
-    """
+    now = timezone.now()
 
-    eastern = pytz.timezone("US/Eastern")
-    now = timezone.now().astimezone(eastern)
+    eastern = pytz.timezone('US/Eastern')
+    now_eastern = now.astimezone(eastern)
 
-    # Get earliest and latest games for each week
-    weeks = (
-        Game.objects.values('week')
-        .annotate(start=Min('game_time'), end=Max('game_time'))
-        .order_by('week')
+    # Find most recent Tuesday 2 AM Eastern
+    days_since_tuesday = (now_eastern.weekday() - 1) % 7  # Tuesday = 1
+    last_tuesday_date = (now_eastern - timedelta(days=days_since_tuesday)).date()
+    week_start_naive = datetime.combine(last_tuesday_date, time(2, 0))
+    week_start = eastern.localize(week_start_naive).astimezone(dt_timezone.utc)
+
+    week_end = week_start + timedelta(days=7)
+
+    # Pick window
+    pick_open = week_start
+    pick_close = eastern.localize(
+        datetime.combine(last_tuesday_date + timedelta(days=2), time(19, 0))
+    ).astimezone(dt_timezone.utc)
+
+    current_game_week = (
+        Game.objects
+        .filter(game_time__gte=week_start, game_time__lt=week_end)
+        .values_list('week', flat=True)
+        .first()
     )
 
-    for w in weeks:
-        week_start = w['start'].astimezone(eastern)
+    if current_game_week is None:
+        current_game_week = 1
 
-        # Adjust week start to Tuesday 2:00 AM ET
-        week_start = week_start - timedelta(days=week_start.weekday())  # Monday
-        week_start += timedelta(days=1)  # Tuesday
-        week_start = week_start.replace(hour=2, minute=0, second=0, microsecond=0)
-
-        pick_close = week_start + timedelta(days=2, hours=17)  # Thursday 7 PM ET
-        week_end = week_start + timedelta(days=6, hours=23, minutes=59)
-
-        if week_start <= now <= week_end:
-            return {
-                'week': w['week'],
-                'pick_open': week_start,
-                'pick_close': pick_close,
-                'is_pick_open': week_start <= now <= pick_close,
-                'is_pick_closed': now > pick_close
-            }
-
-    return None
+    return {
+        'week': current_game_week,
+        'week_start': week_start,
+        'week_end': week_end,
+        'pick_open': pick_open,
+        'pick_close': pick_close,
+        'is_pick_open': pick_open <= now < pick_close,
+        'is_pick_closed': now >= pick_close,
+    }
