@@ -1,6 +1,49 @@
-{% for pick in past_picks %}
-    <li class="{% if pick.points_earned > 0 %}text-success{% else %}text-danger{% endif %}">
-        Week {{ pick.game.week }}: {{ pick.game.away_team.name }} @ {{ pick.game.home_team.name }} –
-        You picked {{ pick.picked_team.name }} ({{ pick.points_earned }} points)
-    </li>
-{% endfor %}
+{#{% for pick in past_picks %}#}
+{#    <li class="{% if pick.points_earned > 0 %}text-success{% else %}text-danger{% endif %}">#}
+{#        Week {{ pick.game.week }}: {{ pick.game.away_team.name }} @ {{ pick.game.home_team.name }} –#}
+{#        You picked {{ pick.picked_team.name }} ({{ pick.points_earned }} points)#}
+{#    </li>#}
+{#{% endfor %}#}
+
+{% block content %}
+    <br>
+    <div class="card shadow">
+        <div class="card-body">
+
+            <h1 class="display-6">All Your Picks</h1>
+            <p>Total Season Points: {{ total_points }}</p>
+
+            <table class="table table-hover">
+
+                <thead>
+                <th scope="col"></th>
+                <th scope="col">Week</th>
+                <th scope="col">Home</th>
+                <th scope="col">Away</th>
+                <th scope="col">Pick</th>
+                <th scope="col">Winner</th>
+                <th scope="col">Points</th>
+                </thead>
+                            {% for pick in past_picks %}
+
+                <tbody>
+                    <td></td>
+                    <td>{{ pick.game.week }}</td>
+                    <td>{{ pick.game.home_team.name }}</td>
+                    <td>{{ pick.game.away_team.name }}</td>
+                    <td>
+                        <span class="{% if pick.game.winner and pick.picked_team == pick.game.winner %}correct{% elif pick.game.winner %}incorrect{% endif %}">
+                            {{ pick.picked_team.name }}
+                        </span>
+                    </td>
+                    <td>{{ pick.game.winner }}</td>
+                    <td>{{ pick.points_earned }}</td>
+                </tbody>
+                            {% endfor %}
+
+            </table>
+        </div>
+    </div>
+
+
+{% endblock content %}

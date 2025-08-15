@@ -7,7 +7,7 @@ from django.utils import timezone
 from .models import Game, Pick
 from .forms import PickFormSet
 from django.contrib import messages
-from django.db.models import Min, Max
+from django.db.models import Min, Max, Sum
 
 class PickView(LoginRequiredMixin, View):
     template_name = 'pool/make_picks.html'
@@ -80,13 +80,17 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['current_week'] = current_week
         context['current_week_games'] = Game.objects.filter(week=current_week)
 
-        context['past_picks'] = (
+        past_picks = (
             Pick.objects.filter(user=self.request.user,
                                 game__game_time__lt=timezone.now())
         .select_related('game', 'picked_team', 'game__home_team',
                         'game__away_team', 'game__winner')
-        .order_by('-game__game_time')
+        .order_by('game__week', 'game__game_time')
         )
+        total_points = past_picks.aggregate(Sum('points_earned'))['points_earned__sum']
+        context['total_points'] = total_points
+        context['past_picks'] = past_picks
+
         return context
 
 
