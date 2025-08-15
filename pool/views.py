@@ -8,6 +8,7 @@ from .models import Game, Pick
 from .forms import PickFormSet
 from django.contrib import messages
 from django.db.models import Min, Max, Sum
+from .utils import get_week_info
 
 class PickView(LoginRequiredMixin, View):
     template_name = 'pool/make_picks.html'
@@ -75,24 +76,41 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # This week's games
-        current_week = self.get_current_week()
-        context['current_week'] = current_week
-        context['current_week_games'] = Game.objects.filter(week=current_week)
+        # Use week utility instead of simple get_current_week
+        week_info = get_week_info()
+        if week_info:
+            context['current_week'] = week_info['week']
+            context['pick_open'] = week_info['pick_open']
+            context['pick_close'] = week_info['pick_close']
+            context['is_pick_open'] = week_info['is_pick_open']
+            context['is_pick_closed'] = week_info['is_pick_closed']
+        else:
+            # fallback if no games yet
+            context['current_week'] = 1
+            context['pick_open'] = None
+            context['pick_close'] = None
+            context['is_pick_open'] = True  # default to allow picks for testing
+            context['is_pick_closed'] = False
 
+        # This week's games
+        context['current_week_games'] = Game.objects.filter(
+            week=context['current_week'])
+
+        # Past picks
         past_picks = (
             Pick.objects.filter(user=self.request.user,
                                 game__game_time__lt=timezone.now())
-        .select_related('game', 'picked_team', 'game__home_team',
-                        'game__away_team', 'game__winner')
-        .order_by('game__week', 'game__game_time')
+            .select_related('game', 'picked_team', 'game__home_team',
+                            'game__away_team', 'game__winner')
+            .order_by('game__week', 'game__game_time')
         )
-        total_points = past_picks.aggregate(Sum('points_earned'))['points_earned__sum']
-        context['total_points'] = total_points
         context['past_picks'] = past_picks
 
-        return context
+        total_points = past_picks.aggregate(Sum('points_earned'))[
+                           'points_earned__sum'] or 0
+        context['total_points'] = total_points
 
+        return context
 
     # --- Helpers ---
     def get_current_week(self):
