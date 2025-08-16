@@ -5,17 +5,18 @@
             {% for game in week_game_summary.games %}
                 <th>{{ game.away_team.alias }} @ {{ game.home_team.alias }}</th>
             {% endfor %}
+            <th>Points</th>
         </tr>
     </thead>
     <tbody>
         {% for row in week_game_summary.summary %}
             <tr>
-                <td>{{ row.user.username }}</td>
+                <td>{{ row.user.first_name }} {{ row.user.last_name.0 }}</td>
                 {% for pick in row.picks %}
                     {% if pick %}
                         {% if pick.game.winner %}
                             <td><span class="{% if pick.picked_team == pick.game.winner %}correct{% else %}incorrect{% endif %}">
-                            {{ pick.picked_team.alias }}</span>
+                            {{ pick.picked_team.alias }}-{{ pick.points_earned }}</span>
                             </td>
                         {% else %}
                             <td> <span class="pending">{{ pick.picked_team.alias }}</span></td>
@@ -24,6 +25,7 @@
                         <td>-</td>
                     {% endif %}
                 {% endfor %}
+                <td>{{ row.points_earned }}</td>
             </tr>
         {% endfor %}
     </tbody>

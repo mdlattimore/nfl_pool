@@ -21,10 +21,14 @@ class Command(BaseCommand):
         parser.add_argument(
             '--games', type=int, default=5, help='Number of games to create (default 5)'
         )
+        parser.add_argument('--num_weeks', type=int, default=5,
+            help='Number of games to create (default 5)'
+        )
 
     def handle(self, *args, **options):
         week_number = options['week']
         num_games = options['games']
+        num_weeks = options['num_weeks']
 
         teams = list(Team.objects.all())
         if len(teams) < num_games * 2:
@@ -38,7 +42,7 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR("No users found. Create some test users first."))
             return
 
-        week_start = timezone.now() - timedelta(weeks=1)
+        week_start = timezone.now() - timedelta(weeks=0)
         games = []
 
         # Create games

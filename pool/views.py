@@ -1,14 +1,16 @@
 # pool/views.py
 from django.views import View
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Sum
 from django.utils import timezone
-from .models import Game, Pick
-from .forms import PickFormSet
-from django.contrib import messages
-from django.db.models import Min, Max, Sum
-from .utils import get_week_info
+from pool.models import Game, Pick
+from pool.forms import PickFormSet
+from pool.utils import get_week_info
+from django.contrib.auth import get_user_model
+
 
 class PickView(LoginRequiredMixin, View):
     template_name = 'pool/make_picks.html'
@@ -153,14 +155,7 @@ class PickView(LoginRequiredMixin, View):
 #         )
 #         return self.render_to_response(context)
 
-from django.views.generic import TemplateView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Sum
-from django.utils import timezone
-from pool.models import Game, Pick
-from pool.forms import PickFormSet
-from pool.utils import get_week_info
-from django.contrib.auth import get_user_model
+
 
 User = get_user_model()
 
@@ -175,6 +170,15 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         # --- Current week info ---
         week_info = get_week_info()
+
+        # Force open/closed state for testing
+        # Comment to enforce pick window
+        # Uncomment to allow picks during window
+        week_info['is_pick_open'] = True
+        week_info['is_pick_closed'] = False
+
+
+
         if week_info:
             context['current_week'] = week_info['week']
             context['pick_open'] = week_info['pick_open']
@@ -205,6 +209,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         # --- Weekly Picks (All Users) ---
         week_info = get_week_info()
+
         week = int(kwargs.get('week', week_info['week'] if week_info else 1))
         context['week_game_summary'] = self.get_week_game_picks_summary(week)
 
@@ -219,7 +224,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         """
         return (
             Pick.objects.filter(game__week=week)
-            .select_related('user', 'picked_team', 'game', 'game__home_team', 'game__away_team', 'game__winner')
+            .select_related('user', 'picked_team', 'game', 'game__home_team',
+                            'game__away_team', 'game__winner', 'points_earned')
             .order_by('user__username', 'game__game_time')
         )
 
@@ -295,7 +301,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
             row = {
                 'user': user,
-                'picks': [picks_by_game.get(game.id) for game in games]
+                'picks': [picks_by_game.get(game.id) for game in games],
+                'points_earned': sum([p.points_earned for p in picks]),
             }
             summary.append(row)
 
