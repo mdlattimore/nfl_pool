@@ -42,7 +42,12 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR("No users found. Create some test users first."))
             return
 
-        week_start = timezone.now() - timedelta(weeks=0)
+        # past
+        # week_start = timezone.now() - timedelta(weeks=0)
+        # future
+        week_start = timezone.now() + timedelta(weeks=1)
+
+
         games = []
 
         # Create games
