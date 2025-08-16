@@ -22,6 +22,7 @@ class Game(models.Model):
     winner = models.ForeignKey(Team, null=True, blank=True,
                                related_name="winner",
                                on_delete=models.SET_NULL)
+
     points = models.PositiveIntegerField(default=1)
 
     # def save(self, *args, **kwargs):

@@ -210,8 +210,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         # --- Weekly Picks (All Users) ---
         week_info = get_week_info()
 
-        week = int(kwargs.get('week', week_info['week'] if week_info else 1))
-        context['week_game_summary'] = self.get_week_game_picks_summary(week)
+        # week = int(kwargs.get('week', week_info['week'] if week_info else 1))
+        # context['week_game_summary'] = self.get_week_game_picks_summary(week)
+
+        context[
+            'all_weeks_game_summary'] = self.get_all_weeks_game_picks_summary()
 
         # --- Optional stubs ---
         context['standings'] = self.get_standings()
@@ -285,25 +288,129 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             for game in games
         ]
 
-    def get_week_game_picks_summary(self, week):
+    # def get_week_game_picks_summary(self, week):
+    #     users = User.objects.all()
+    #     games = Game.objects.filter(week=week).select_related(
+    #         'home_team', 'away_team', 'winner'
+    #     ).order_by('game_time')
+    #
+    #     summary = []
+    #
+    #     for user in users:
+    #         picks = Pick.objects.filter(user=user,
+    #                                     game__in=games).select_related(
+    #             'picked_team')
+    #         picks_by_game = {pick.game_id: pick for pick in picks}
+    #
+    #         row = {
+    #             'user': user,
+    #             'picks': [picks_by_game.get(game.id) for game in games],
+    #             'points_earned': sum([p.points_earned for p in picks]),
+    #             'week': week,
+    #         }
+    #         summary.append(row)
+    #     # Sort descending by points_earned
+    #     summary.sort(key=lambda r: r['points_earned'], reverse=True)
+    #     # Add a "rank" field
+    #     for i, row in enumerate(summary, start=1):
+    #         row['rank'] = i
+    #     return {'games': games, 'summary': summary}
+
+    # def get_all_weeks_game_picks_summary(self):
+    #     users = User.objects.all()
+    #     # Grab all distinct weeks, descending
+    #     weeks = Game.objects.values_list("week", flat=True).distinct().order_by(
+    #         "-week")
+    #
+    #     all_summaries = []
+    #
+    #     for week in weeks:
+    #         games = Game.objects.filter(week=week).select_related(
+    #             "home_team", "away_team", "winner"
+    #         ).order_by("game_time")
+    #
+    #         week_summary = []
+    #
+    #         for user in users:
+    #             picks = Pick.objects.filter(
+    #                 user=user, game__in=games
+    #             ).select_related("picked_team")
+    #
+    #             picks_by_game = {pick.game_id: pick for pick in picks}
+    #
+    #             row = {
+    #                 "user": user,
+    #                 "picks": [picks_by_game.get(game.id) for game in games],
+    #                 "points_earned": sum([p.points_earned for p in picks]),
+    #                 "week": week,
+    #             }
+    #             week_summary.append(row)
+    #
+    #         # Sort descending by points
+    #         week_summary.sort(key=lambda r: r["points_earned"], reverse=True)
+    #
+    #         # Add ranks
+    #         for i, row in enumerate(week_summary, start=1):
+    #             row["rank"] = i
+    #
+    #         all_summaries.append(
+    #             {
+    #                 "week": week,
+    #                 "games": games,
+    #                 "summary": week_summary,
+    #             }
+    #         )
+    #
+    #     return all_summaries
+
+
+    def get_all_weeks_game_picks_summary(self):
         users = User.objects.all()
-        games = Game.objects.filter(week=week).select_related(
-            'home_team', 'away_team', 'winner'
-        ).order_by('game_time')
 
-        summary = []
+        # Grab all distinct weeks, descending
+        weeks = Game.objects.values_list("week", flat=True).distinct().order_by("-week")
 
-        for user in users:
-            picks = Pick.objects.filter(user=user,
-                                        game__in=games).select_related(
-                'picked_team')
-            picks_by_game = {pick.game_id: pick for pick in picks}
+        all_summaries = []
 
-            row = {
-                'user': user,
-                'picks': [picks_by_game.get(game.id) for game in games],
-                'points_earned': sum([p.points_earned for p in picks]),
-            }
-            summary.append(row)
+        for week in weeks:
+            games = Game.objects.filter(week=week).select_related(
+                "home_team", "away_team", "winner"
+            ).order_by("game_time")
 
-        return {'games': games, 'summary': summary}
+            # Only include this week if there is at least one pick
+            if not Pick.objects.filter(game__in=games).exists():
+                continue
+
+            week_summary = []
+
+            for user in users:
+                picks = Pick.objects.filter(
+                    user=user, game__in=games
+                ).select_related("picked_team")
+
+                picks_by_game = {pick.game_id: pick for pick in picks}
+
+                row = {
+                    "user": user,
+                    "picks": [picks_by_game.get(game.id) for game in games],
+                    "points_earned": sum([p.points_earned for p in picks]),
+                    "week": week,
+                }
+                week_summary.append(row)
+
+            # Sort descending by points
+            week_summary.sort(key=lambda r: r["points_earned"], reverse=True)
+
+            # Add ranks
+            for i, row in enumerate(week_summary, start=1):
+                row["rank"] = i
+
+            all_summaries.append(
+                {
+                    "week": week,
+                    "games": games,
+                    "summary": week_summary,
+                }
+            )
+
+        return all_summaries

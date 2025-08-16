@@ -37,3 +37,8 @@ body {
 .incorrect { color: red; }
 
 .pending { color: black; }
+
+.high-value {
+    color: red;
+    font-weight: bold;
+}
