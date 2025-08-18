@@ -25,23 +25,6 @@ class Game(models.Model):
 
     points = models.PositiveIntegerField(default=1)
 
-    # def save(self, *args, **kwargs):
-    #     # Keep track of whether winner was just set/changed
-    #     winner_changed = False
-    #     if self.pk:  # existing game
-    #         old = Game.objects.filter(pk=self.pk).first()
-    #         if old and old.winner != self.winner:
-    #             winner_changed = True
-    #
-    #     super().save(*args, **kwargs)  # save the game first
-    #
-    #     # If winner changed, update all related picks
-    #     if self.winner and winner_changed:
-    #         from .models import Pick
-    #         picks = Pick.objects.filter(game=self)
-    #         for pick in picks:
-    #             pick.points_earned = self.points if pick.picked_team == self.winner else 0
-    #             pick.save()
     def save(self, *args, **kwargs):
         winner_changed = False
         if self.pk:  # existing game
@@ -75,9 +58,6 @@ class Pick(models.Model):
     picked_team = models.ForeignKey(Team, on_delete=models.CASCADE)
     points_earned = models.PositiveIntegerField(default=0)
     is_correct = models.BooleanField(null=True, blank=True)
-
-
-
 
     class Meta:
         unique_together = ("user", "game")

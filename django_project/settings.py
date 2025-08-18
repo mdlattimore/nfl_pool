@@ -178,6 +178,14 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
 DEFAULT_FROM_EMAIL = "root@localhost"
 
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# DEFAULT_FROM_EMAIL = "mark@lattimore.us"
+# EMAIL_HOST = "smtp.sendgrid.net"
+# EMAIL_HOST_USER = "apikey"
+# EMAIL_HOST_PASSWORD = "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"
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+
 # django-debug-toolbar
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
 # https://docs.djangoproject.com/en/dev/ref/settings/#internal-ips
@@ -213,3 +221,5 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_SIGNUP_FORM_CLASS = 'accounts.signup_forms.CustomSignupForm'
+

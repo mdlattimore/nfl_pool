@@ -43,9 +43,9 @@ class Command(BaseCommand):
             return
 
         # past
-        # week_start = timezone.now() - timedelta(weeks=0)
+        week_start = timezone.now() - timedelta(weeks=3)
         # future
-        week_start = timezone.now() + timedelta(weeks=1)
+        # week_start = timezone.now() + timedelta(weeks=1)
 
 
         games = []

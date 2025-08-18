@@ -13,3 +13,10 @@ media
 
 # Virtual environment
 .venv
+
+.csv
+
+scratch*
+
+/pick_audit*
+/patterns.py
