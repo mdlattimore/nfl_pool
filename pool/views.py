@@ -127,7 +127,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             'all_weeks_game_summary'] = self.get_all_weeks_game_picks_summary()
 
         # --- Optional stubs ---
-        context['standings'] = self.get_standings()
+        overall_standings = self.get_overall_standings()
+        context['standings'] = overall_standings['standings']
+        context['weeks'] = overall_standings['weeks']
 
         return context
 
@@ -142,9 +144,77 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             .order_by('user__username', 'game__game_time')
         )
 
-    def get_standings(self):
-        """Stub: replace with your pool standings calculation."""
-        return []
+    # def get_overall_standings(self):
+    #     User = get_user_model()
+    #     users = User.objects.all()
+    #     weeks = Game.objects.values_list('week', flat=True).distinct().order_by(
+    #         'week')
+    #     standings = []
+    #
+    #     for user in users:
+    #         weekly_points = []
+    #         total_points = 0
+    #         for week in weeks:
+    #             picks = Pick.objects.filter(user=user, game__week=week)
+    #             week_points = sum(p.points_earned for p in picks)
+    #             weekly_points.append(week_points)
+    #             total_points += week_points
+    #         standings.append({
+    #             'user': user,
+    #             'weekly_points': weekly_points,
+    #             'total_points': total_points
+    #         })
+    #
+    #     # Sort descending by total points
+    #     standings.sort(key=lambda r: r['total_points'], reverse=True)
+    #
+    #     # Assign rank
+    #     for i, row in enumerate(standings, start=1):
+    #         row['rank'] = i
+    #
+    #     return {
+    #         'weeks': list(weeks),
+    #         'standings': standings
+    #     }
+    def get_overall_standings(self):
+        User = get_user_model()
+        users = User.objects.all()
+        weeks = Game.objects.values_list('week', flat=True).distinct().order_by(
+            'week')
+        standings = []
+
+        for user in users:
+            weekly_points = []
+            total_points = 0
+            for week in weeks:
+                picks = Pick.objects.filter(user=user, game__week=week)
+                week_points = sum(p.points_earned for p in picks)
+                weekly_points.append(week_points)
+                total_points += week_points
+            standings.append({
+                'user': user,
+                'weekly_points': weekly_points,
+                'total_points': total_points
+            })
+
+        # Sort descending by total points
+        standings.sort(key=lambda r: r['total_points'], reverse=True)
+
+        # Assign competition rank (1224 style)
+        last_points = None
+        last_rank = 0
+        for i, row in enumerate(standings, start=1):
+            if row['total_points'] != last_points:
+                row['rank'] = i
+                last_rank = i
+                last_points = row['total_points']
+            else:
+                row['rank'] = last_rank
+
+        return {
+            'weeks': list(weeks),
+            'standings': standings
+        }
 
     # ------------------------
     # GET / POST handling for pick form

@@ -1,0 +1,28 @@
+<h3>Season Rankings</h3>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th style="width:5%">Rank</th>
+        <th>User</th>
+        {% for week in weeks %}
+            <th>
+                Wk {{ week }}
+            </th>
+        {% endfor %}
+        <th>Total</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for result in standings %}
+        <tr>
+            <td style="width:5%">{{ result.rank }}</td>
+            <td>{{ result.user.first_name }} {{ result.user.last_name.0 }}</td>
+            {% for score in result.weekly_points %}
+                <td>{{ score }}</td>
+            {% endfor %}
+            <td>{{ result.total_points }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
