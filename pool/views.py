@@ -43,6 +43,8 @@ class PickView(LoginRequiredMixin, View):
                       {'formset': formset, 'week': week, 'games': games})
 
     def post(self, request, week):
+        print("POST reached PickView.post")
+
         games = self.get_games(week)
         formset = PickFormSet(request.POST, games=games)
 
@@ -58,6 +60,8 @@ class PickView(LoginRequiredMixin, View):
                             defaults={'picked_team': picked_team}
                         )
             messages.success(request, 'Your picks have been saved.')
+            print("Adding success message")
+
             return redirect('make_picks', week=week)
         else:
             messages.error(request, "You must make a pick for every game.")
@@ -84,8 +88,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         # Force open/closed state for testing
         # Comment to enforce pick window
         # Uncomment to allow picks during window
-        # week_info['is_pick_open'] = True
-        # week_info['is_pick_closed'] = False
+        week_info['is_pick_open'] = True
+        week_info['is_pick_closed'] = False
 
         if week_info:
             context['current_week'] = week_info['week']
@@ -249,6 +253,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                         game=game,
                         defaults={'picked_team': picked_team}
                     )
+            messages.success(request, 'Your picks have been saved.')
+        else:
+            messages.error(request, "You must make a pick for every game.")
         # Re-render dashboard with messages
         context = self.get_context_data(
             week=week,

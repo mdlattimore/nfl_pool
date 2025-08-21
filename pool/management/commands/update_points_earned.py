@@ -38,3 +38,6 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(
             f"Finished updating {total_updated} picks and awarded {total_bonus_awarded} unique correct bonuses."
         ))
+
+# pool/management/commands/audit_picks.py
+
