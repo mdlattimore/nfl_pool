@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from pool.models import Game, Pick
 
-UNIQUE_CORRECT_BONUS = 3
+UNIQUE_CORRECT_BONUS = 1
 
 class Command(BaseCommand):
     help = "Update points_earned and apply unique correct pick bonuses."
