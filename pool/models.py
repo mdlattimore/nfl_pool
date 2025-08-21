@@ -57,7 +57,12 @@ class Pick(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     picked_team = models.ForeignKey(Team, on_delete=models.CASCADE)
     points_earned = models.PositiveIntegerField(default=0)
+    bonus_points = models.PositiveIntegerField(default=0)
     is_correct = models.BooleanField(null=True, blank=True)
+
+    @property
+    def total_points(self):
+        return self.points_earned + self.bonus_points
 
     class Meta:
         unique_together = ("user", "game")

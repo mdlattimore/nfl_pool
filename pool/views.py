@@ -114,8 +114,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             .order_by('game__week', 'game__game_time')
         )
         context['past_picks'] = past_picks
-        context['total_points'] = past_picks.aggregate(Sum('points_earned'))[
-                                      'points_earned__sum'] or 0
+        context['total_points'] = sum(p.total_points for p in past_picks)
+
 
         # --- Weekly Picks (All Users) ---
         week_info = get_week_info()
@@ -140,7 +140,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         return (
             Pick.objects.filter(game__week=week)
             .select_related('user', 'picked_team', 'game', 'game__home_team',
-                            'game__away_team', 'game__winner', 'points_earned')
+                            'game__away_team', 'game__winner')
             .order_by('user__username', 'game__game_time')
         )
 
@@ -188,7 +188,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             total_points = 0
             for week in weeks:
                 picks = Pick.objects.filter(user=user, game__week=week)
-                week_points = sum(p.points_earned for p in picks)
+                week_points = sum(p.total_points for p in picks)
                 weekly_points.append(week_points)
                 total_points += week_points
             standings.append({
@@ -300,7 +300,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                 row = {
                     "user": user,
                     "picks": [picks_by_game.get(game.id) for game in games],
-                    "points_earned": sum([p.points_earned for p in picks]),
+                    "points_earned": sum([p.total_points for p in picks]),
                     "week": week,
                 }
                 week_summary.append(row)
