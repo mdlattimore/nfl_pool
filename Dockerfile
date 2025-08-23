@@ -1,27 +1,30 @@
-# Pull base image
-FROM python:3.12.2-slim-bookworm
+ARG PYTHON_VERSION=3.13-slim
 
-# Set environment variables
+FROM python:${PYTHON_VERSION}
+
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Create and set work directory called `app`
+# install psycopg2 dependencies.
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN mkdir -p /code
+
 WORKDIR /code
 
-# Install dependencies
 COPY requirements.txt /tmp/requirements.txt
-
 RUN set -ex && \
     pip install --upgrade pip && \
     pip install -r /tmp/requirements.txt && \
     rm -rf /root/.cache/
+COPY . /code
 
-# Copy local project
-COPY . /code/
+ENV SECRET_KEY "2WFa0QeV7O0bezf7KhrhnLomO84iE5TjUbJeMpw51wSu6ojMWR"
+RUN python manage.py collectstatic --noinput
 
-# Expose port 8000
 EXPOSE 8000
 
-# Use gunicorn on port 8000
-CMD ["gunicorn", "--bind", ":8000", "--workers", "2", "django_project.wsgi"]
+CMD ["gunicorn","--bind",":8000","--workers","2","django_project.wsgi"]
