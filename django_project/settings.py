@@ -51,7 +51,7 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",  # WhiteNoise
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    # "debug_toolbar.middleware.DebugToolbarMiddleware",  # Django Debug Toolbar
+    "debug_toolbar.middleware.DebugToolbarMiddleware",  # Django Debug Toolbar
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -186,7 +186,7 @@ ANYMAIL = {
     "MAILJET_API_KEY": os.environ.get("MAILJET_API_KEY"),
     "MAILJET_SECRET_KEY": os.environ.get("MAILJET_SECRET_KEY"),
 }
-DEFAULT_FROM_EMAIL = "mark.d.lattimore@gmail.com"
+DEFAULT_FROM_EMAIL = "mark@lattimore.us"
 
 
 # django-debug-toolbar
