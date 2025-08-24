@@ -88,8 +88,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         # Force open/closed state for testing
         # Comment to enforce pick window
         # Uncomment to allow picks during window
-        week_info['is_pick_open'] = True
-        week_info['is_pick_closed'] = False
+        # week_info['is_pick_open'] = True
+        # week_info['is_pick_closed'] = False
 
         if week_info:
             context['current_week'] = week_info['week']
