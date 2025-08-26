@@ -1,30 +1,39 @@
-<span class="high-value">*</span> denotes 2+ point game
+
+ <span class="high-value">*</span> denotes 2+ point game
 {% for week_info in all_weeks_game_summary %}
     <h3>Week {{ week_info.week }}</h3>
-    <table class="table table-striped">
+
+    <div class="table-responsive-scroll">
+    <table class="table table-striped table-fixed-columns">
         <thead>
         <tr>
-            <th style="width:5%">Rank</th>
-            <th>User</th>
+            <th class="sticky-left" style="width: 50px;">Rank</th>
+            <th class="sticky-left-2" style="width: 150px; box-shadow: inset -1px 0 0 #d1d5db; /* muted gray */
+">User</th>
             {% for game in week_info.games %}
                 <th>
                     {{ game.away_team.alias }} @ {{ game.home_team.alias }}
                     {% if game.points > 1 %}<span class="high-value">*</span>{% endif %}
-                </th>              {% endfor %}
-            <th>Points</th>
+                </th>
+            {% endfor %}
+            <th class="sticky-right" style="width: 80px; box-shadow: inset 1px 0 0 #d1d5db; /* muted gray */
+">Points</th>
         </tr>
         </thead>
         <tbody>
         {% for row in week_info.summary %}
             <tr>
-                <td style="width:5%">{{ row.rank }}</td>
-                <td>{{ row.user.first_name }} {{ row.user.last_name.0 }}</td>
+                <td class="sticky-left">{{ row.rank }}</td>
+                <td class="sticky-left-2" style="box-shadow: inset -1px 0 0 #d1d5db; /* muted gray */
+">{{ row.user.first_name }} {{ row.user.last_name.0 }}</td>
                 {% for pick in row.picks %}
                     {% if pick %}
                         {% if pick.game.winner %}
-                            <td><span
-                                    class="{% if pick.picked_team == pick.game.winner %}correct{% else %}incorrect{% endif %}">
-                              {{ pick.picked_team.alias }}-{{ pick.total_points }}</span></td>
+                            <td>
+                                <span class="{% if pick.picked_team == pick.game.winner %}correct{% else %}incorrect{% endif %}">
+                                    {{ pick.picked_team.alias }}-{{ pick.total_points }}
+                                </span>
+                            </td>
                         {% else %}
                             <td><span class="pending">{{ pick.picked_team.alias }}</span></td>
                         {% endif %}
@@ -32,9 +41,12 @@
                         <td>-</td>
                     {% endif %}
                 {% endfor %}
-                <td>{{ row.points_earned }}</td>
+                <td class="sticky-right" style="box-shadow: inset 1px 0 0 #d1d5db; /* muted gray */
+">{{ row.points_earned }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+</div>
+
 {% endfor %}

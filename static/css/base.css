@@ -42,3 +42,61 @@ body {
     color: red;
     font-weight: bold;
 }
+
+
+
+/* Scroll container for horizontal scrolling */
+.table-responsive-scroll {
+    overflow-x: auto;
+    position: relative;
+}
+
+
+/* First sticky column: Rank */
+.table-fixed-columns th.sticky-left,
+.table-fixed-columns td.sticky-left {
+    position: sticky;
+    left: 0;
+    background-color: #fff;
+    z-index: 5;
+    white-space: nowrap;
+    border-right: none; /* remove the border to avoid gutter */
+}
+
+/* Second sticky column: User */
+.table-fixed-columns th.sticky-left-2,
+.table-fixed-columns td.sticky-left-2 {
+    position: sticky;
+    left: 50px; /* exactly the width of the Rank column */
+    background-color: #fff;
+    z-index: 6;
+    white-space: nowrap;
+    border-right: 1px solid #dee2e6; /* optional: keep a border on the right */
+}
+
+
+/* Sticky right column (Points) */
+.table-fixed-columns th.sticky-right,
+.table-fixed-columns td.sticky-right {
+    position: sticky;
+    right: 0;
+    background-color: #fff;
+    z-index: 4;
+    white-space: nowrap;
+    border-left: 1px solid #dee2e6;
+}
+
+/* Optional: prevent table text from wrapping */
+.table-fixed-columns td,
+.table-fixed-columns th {
+    white-space: nowrap;
+}
+
+
+td:last-child, th:last-child {
+  position: sticky;
+  right: 0;
+  background: white;
+  border-left: 2px solid #d3d3d3; /* muted grey line */
+  z-index: 2;
+}
