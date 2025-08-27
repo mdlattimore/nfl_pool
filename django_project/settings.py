@@ -28,7 +28,7 @@ DEBUG = env.bool("DEBUG", default=False)
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 # ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
-ALLOWED_HOSTS = ["nfl2025.fly.dev", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["nfl2025.fly.dev", "localhost", "127.0.0.1", "192.168.1.179"]
 
 CSRF_TRUSTED_ORIGINS = ["https://nfl2025.fly.dev"]
 

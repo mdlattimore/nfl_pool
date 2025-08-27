@@ -1,0 +1,1 @@
+fly ssh sftp get [path/to/remote/file] [path/to/local/save] (eg, /Users/mark/Downloads/audit.csv)

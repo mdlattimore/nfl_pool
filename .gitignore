@@ -24,3 +24,5 @@ scratch*
 /keys.txt
 
 .env
+
+/notes.txt
