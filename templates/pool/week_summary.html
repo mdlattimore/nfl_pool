@@ -1,52 +1,60 @@
+<span class="high-value">*</span> 2 point game<br>
+<span class="high-value">+</span> Includes perfect week bonus
 
- <span class="high-value">*</span> denotes 2+ point game
 {% for week_info in all_weeks_game_summary %}
     <h3>Week {{ week_info.week }}</h3>
 
     <div class="table-responsive-scroll">
-    <table class="table table-striped table-fixed-columns">
-        <thead>
-        <tr>
-            <th class="sticky-left" style="width: 50px;">Rank</th>
-            <th class="sticky-left-2" style="width: 150px; box-shadow: inset -1px 0 0 #d1d5db; /* muted gray */
-">User</th>
-            {% for game in week_info.games %}
-                <th>
-                    {{ game.away_team.alias }} @ {{ game.home_team.alias }}
-                    {% if game.points > 1 %}<span class="high-value">*</span>{% endif %}
-                </th>
-            {% endfor %}
-            <th class="sticky-right" style="width: 80px; box-shadow: inset 1px 0 0 #d1d5db; /* muted gray */
-">Points</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for row in week_info.summary %}
+        <table class="table table-striped table-fixed-columns">
+            <thead>
             <tr>
-                <td class="sticky-left">{{ row.rank }}</td>
-                <td class="sticky-left-2" style="box-shadow: inset -1px 0 0 #d1d5db; /* muted gray */
+                <th class="sticky-left" style="width: 50px;">Rank</th>
+                <th class="sticky-left-2" style="width: 150px; box-shadow: inset -1px 0 0 #d1d5db; /* muted gray */
+">User
+                </th>
+                {% for game in week_info.games %}
+                    <th>
+                        {{ game.away_team.alias }} @ {{ game.home_team.alias }}
+                        {% if game.points > 1 %}<span class="high-value">*</span>{% endif %}
+                    </th>
+                {% endfor %}
+                <th class="sticky-right" style="width: 80px; box-shadow: inset 1px 0 0 #d1d5db; /* muted gray */
+">Points
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in week_info.summary %}
+                <tr>
+                    <td class="sticky-left">{{ row.rank }}</td>
+                    <td class="sticky-left-2" style="box-shadow: inset -1px 0 0 #d1d5db; /* muted gray */
 ">{{ row.user.first_name }} {{ row.user.last_name.0 }}</td>
-                {% for pick in row.picks %}
-                    {% if pick %}
-                        {% if pick.game.winner %}
-                            <td>
+                    {% for pick in row.picks %}
+                        {% if pick %}
+                            {% if pick.game.winner %}
+                                <td>
                                 <span class="{% if pick.picked_team == pick.game.winner %}correct{% else %}incorrect{% endif %}">
                                     {{ pick.picked_team.alias }}-{{ pick.total_points }}
                                 </span>
-                            </td>
+                                </td>
+                            {% else %}
+                                <td><span class="pending">{{ pick.picked_team.alias }}</span></td>
+                            {% endif %}
                         {% else %}
-                            <td><span class="pending">{{ pick.picked_team.alias }}</span></td>
+                            <td>-</td>
                         {% endif %}
+                    {% endfor %}
+                    {% if row.perfect_week %}
+                        <td class="sticky-right" style="box-shadow: inset 1px 0 0 #d1d5db; /* muted gray */
+">{{ row.points_earned }}<span class="high-value">+</span></td>
                     {% else %}
-                        <td>-</td>
-                    {% endif %}
-                {% endfor %}
-                <td class="sticky-right" style="box-shadow: inset 1px 0 0 #d1d5db; /* muted gray */
+                        <td class="sticky-right" style="box-shadow: inset 1px 0 0 #d1d5db; /* muted gray */
 ">{{ row.points_earned }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endfor %}

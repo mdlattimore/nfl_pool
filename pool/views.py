@@ -304,11 +304,30 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
                 picks_by_game = {pick.game_id: pick for pick in picks}
 
+                # checking for perfect week
+                wins = 0
+                for pick in Pick.objects.filter(game__in=games).filter(
+                        user=user):
+                    if pick.picked_team_id == pick.game.winner_id:
+                        wins += 1
+
+                perfect_week_bonus = 0
+                if len(games) == wins:
+                    perfect_week_bonus = 3
+                    print(f"{week}: {user.username} wins!")
+
+                point_subtotal = sum([p.total_points for p in picks])
+                earned_points = point_subtotal + perfect_week_bonus
+                if earned_points > point_subtotal:
+                    perfect_week = True
+                else:
+                    perfect_week = False
                 row = {
                     "user": user,
                     "picks": [picks_by_game.get(game.id) for game in games],
-                    "points_earned": sum([p.total_points for p in picks]),
+                    "points_earned": earned_points,
                     "week": week,
+                    "perfect_week": perfect_week,
                 }
                 week_summary.append(row)
 
