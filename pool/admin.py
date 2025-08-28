@@ -29,9 +29,17 @@ class GameAdmin(admin.ModelAdmin):
     form = GameAdminForm
     list_display = ("home_team", "away_team", "week")
 
+
+
+
 @admin.register(Pick)
 class PickAdmin(admin.ModelAdmin):
     list_display = ("game", "picked_team", "user")
+
+
+
+
+
 
 @admin.register(Score)
 class ScoreAdmin(admin.ModelAdmin):

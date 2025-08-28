@@ -12,6 +12,7 @@ from django.views.generic import TemplateView
 from pool.forms import PickFormSet
 from pool.models import Game, Pick
 from pool.utils import get_week_info
+from django.db.models import Count
 
 
 class PickView(LoginRequiredMixin, View):
@@ -148,38 +149,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             .order_by('user__username', 'game__game_time')
         )
 
-    # def get_overall_standings(self):
-    #     User = get_user_model()
-    #     users = User.objects.all()
-    #     weeks = Game.objects.values_list('week', flat=True).distinct().order_by(
-    #         'week')
-    #     standings = []
-    #
-    #     for user in users:
-    #         weekly_points = []
-    #         total_points = 0
-    #         for week in weeks:
-    #             picks = Pick.objects.filter(user=user, game__week=week)
-    #             week_points = sum(p.points_earned for p in picks)
-    #             weekly_points.append(week_points)
-    #             total_points += week_points
-    #         standings.append({
-    #             'user': user,
-    #             'weekly_points': weekly_points,
-    #             'total_points': total_points
-    #         })
-    #
-    #     # Sort descending by total points
-    #     standings.sort(key=lambda r: r['total_points'], reverse=True)
-    #
-    #     # Assign rank
-    #     for i, row in enumerate(standings, start=1):
-    #         row['rank'] = i
-    #
-    #     return {
-    #         'weeks': list(weeks),
-    #         'standings': standings
-    #     }
+
     def get_overall_standings(self):
         User = get_user_model()
         users = User.objects.all()
@@ -277,12 +247,88 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             for game in games
         ]
 
+    # def get_all_weeks_game_picks_summary(self):
+    #     users = User.objects.all()
+    #
+    #     # Grab all distinct weeks, descending
+    #     weeks = Game.objects.values_list("week", flat=True).distinct().order_by(
+    #         "-week")
+    #
+    #     all_summaries = []
+    #
+    #     for week in weeks:
+    #         games = Game.objects.filter(week=week).select_related(
+    #             "home_team", "away_team", "winner"
+    #         ).order_by("game_time")
+    #
+    #         # Only include this week if there is at least one pick
+    #         if not Pick.objects.filter(game__in=games).exists():
+    #             continue
+    #
+    #         week_summary = []
+    #
+    #         for user in users:
+    #             picks = Pick.objects.filter(
+    #                 user=user, game__in=games
+    #             ).select_related("picked_team")
+    #
+    #             picks_by_game = {pick.game_id: pick for pick in picks}
+    #
+    #             # checking for perfect week
+    #             wins = 0
+    #             for pick in Pick.objects.filter(game__in=games).filter(
+    #                     user=user):
+    #                 if pick.picked_team_id == pick.game.winner_id:
+    #                     wins += 1
+    #
+    #             perfect_week_bonus = 0
+    #             if len(games) == wins:
+    #                 perfect_week_bonus = 3
+    #                 print(f"{week}: {user.username} wins!")
+    #
+    #             point_subtotal = sum([p.total_points for p in picks])
+    #             earned_points = point_subtotal + perfect_week_bonus
+    #             if earned_points > point_subtotal:
+    #                 perfect_week = True
+    #             else:
+    #                 perfect_week = False
+    #             row = {
+    #                 "user": user,
+    #                 "picks": [picks_by_game.get(game.id) for game in games],
+    #                 "points_earned": earned_points,
+    #                 "week": week,
+    #                 "perfect_week": perfect_week,
+    #             }
+    #             week_summary.append(row)
+    #
+    #         # Sort descending by points
+    #         week_summary.sort(key=lambda r: r["points_earned"], reverse=True)
+    #
+    #         # Assign ranks (ties handled properly: equal points → same rank)
+    #         current_rank = 0
+    #         last_points = None
+    #         for idx, row in enumerate(week_summary, start=1):
+    #             if row["points_earned"] != last_points:
+    #                 current_rank = idx
+    #                 last_points = row["points_earned"]
+    #             row["rank"] = current_rank
+    #
+    #         all_summaries.append(
+    #             {
+    #                 "week": week,
+    #                 "games": games,
+    #                 "summary": week_summary,
+    #             }
+    #         )
+    #
+    #     return all_summaries
+
+
     def get_all_weeks_game_picks_summary(self):
         users = User.objects.all()
 
         # Grab all distinct weeks, descending
-        weeks = Game.objects.values_list("week", flat=True).distinct().order_by(
-            "-week")
+        weeks = Game.objects.values_list("week", flat=True).distinct().order_by("-week")
 
         all_summaries = []
 
@@ -291,50 +337,55 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                 "home_team", "away_team", "winner"
             ).order_by("game_time")
 
-            # Only include this week if there is at least one pick
             if not Pick.objects.filter(game__in=games).exists():
                 continue
 
             week_summary = []
 
-            for user in users:
-                picks = Pick.objects.filter(
-                    user=user, game__in=games
-                ).select_related("picked_team")
+            # --- Precompute uniqueness ---
+            unique_map = (
+                Pick.objects.filter(game__in=games)
+                .values("game_id", "picked_team_id")
+                .annotate(count=Count("id"))
+                .filter(count=1)
+            )
+            unique_set = {(u["game_id"], u["picked_team_id"]) for u in unique_map}
 
+            for user in users:
+                picks = Pick.objects.filter(user=user, game__in=games).select_related(
+                    "picked_team", "game", "game__winner"
+                )
                 picks_by_game = {pick.game_id: pick for pick in picks}
 
-                # checking for perfect week
-                wins = 0
-                for pick in Pick.objects.filter(game__in=games).filter(
-                        user=user):
-                    if pick.picked_team_id == pick.game.winner_id:
-                        wins += 1
+                # count wins for perfect week
+                wins = sum(
+                    1 for pick in picks if pick.picked_team_id == pick.game.winner_id
+                )
 
-                perfect_week_bonus = 0
-                if len(games) == wins:
-                    perfect_week_bonus = 3
-                    print(f"{week}: {user.username} wins!")
+                perfect_week_bonus = 3 if wins and wins == len(games) else 0
 
-                point_subtotal = sum([p.total_points for p in picks])
-                earned_points = point_subtotal + perfect_week_bonus
-                if earned_points > point_subtotal:
-                    perfect_week = True
-                else:
-                    perfect_week = False
-                row = {
+                # --- recompute points: base + unique bonus ---
+                earned_points = 0
+                for pick in picks:
+                    base = pick.game.points if pick.picked_team_id == pick.game.winner_id else 0
+                    unique_bonus = (
+                        2 if (pick.game_id, pick.picked_team_id) in unique_set and base > 0 else 0
+                    )
+                    earned_points += base + unique_bonus
+
+                earned_points += perfect_week_bonus
+
+                week_summary.append({
                     "user": user,
                     "picks": [picks_by_game.get(game.id) for game in games],
                     "points_earned": earned_points,
                     "week": week,
-                    "perfect_week": perfect_week,
-                }
-                week_summary.append(row)
+                    "perfect_week": bool(perfect_week_bonus),
+                })
 
-            # Sort descending by points
+            # Sort & rank
             week_summary.sort(key=lambda r: r["points_earned"], reverse=True)
 
-            # Assign ranks (ties handled properly: equal points → same rank)
             current_rank = 0
             last_points = None
             for idx, row in enumerate(week_summary, start=1):
@@ -343,12 +394,10 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                     last_points = row["points_earned"]
                 row["rank"] = current_rank
 
-            all_summaries.append(
-                {
-                    "week": week,
-                    "games": games,
-                    "summary": week_summary,
-                }
-            )
+            all_summaries.append({
+                "week": week,
+                "games": games,
+                "summary": week_summary,
+            })
 
         return all_summaries
