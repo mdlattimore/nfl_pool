@@ -43,7 +43,7 @@ class Command(BaseCommand):
             return
 
         # past
-        week_start = timezone.now() - timedelta(weeks=1)
+        week_start = timezone.now() - timedelta(weeks=0)
         # future
         # week_start = timezone.now() + timedelta(weeks=1)
 

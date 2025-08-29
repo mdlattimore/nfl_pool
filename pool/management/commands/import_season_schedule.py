@@ -1,4 +1,6 @@
 # pool/management/commands/import_season_schedule.py
+# use nfl_2025_schedule_processed.json
+
 
 import json
 from django.core.management.base import BaseCommand, CommandError
