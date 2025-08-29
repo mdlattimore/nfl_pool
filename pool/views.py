@@ -155,48 +155,6 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         )
 
 
-    # def get_overall_standings(self):
-    #     User = get_user_model()
-    #     users = User.objects.all()
-    #     weeks = Game.objects.values_list('week', flat=True).distinct().order_by(
-    #         'week')
-    #     standings = []
-    #
-    #     for user in users:
-    #         weekly_points = []
-    #         total_points = 0
-    #         for week in weeks:
-    #             picks = Pick.objects.filter(user=user, game__week=week)
-    #             week_points = sum(p.total_points for p in picks)
-    #             weekly_points.append(week_points)
-    #             total_points += week_points
-    #         standings.append({
-    #             'user': user,
-    #             'weekly_points': weekly_points,
-    #             'total_points': total_points
-    #         })
-    #
-    #     # Sort descending by total points
-    #     standings.sort(key=lambda r: r['total_points'], reverse=True)
-    #
-    #     # Assign competition rank (1224 style)
-    #     last_points = None
-    #     last_rank = 0
-    #     for i, row in enumerate(standings, start=1):
-    #         if row['total_points'] != last_points:
-    #             row['rank'] = i
-    #             last_rank = i
-    #             last_points = row['total_points']
-    #         else:
-    #             row['rank'] = last_rank
-    #
-    #     return {
-    #         'weeks': list(weeks),
-    #         'standings': standings
-    #     }
-
-    # at top of the file (if not already present)
-    from django.db.models import Count
 
     def get_overall_standings(self):
         UNIQUE_BONUS = 2  # keep in sync with your rules
