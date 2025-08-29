@@ -1,7 +1,43 @@
-from django.contrib import admin
+# pool/admin.py
 
+from django.contrib import admin, messages
 from .models import Team, Game, Pick, Score
 from django import forms
+from django.urls import path
+from django.http import JsonResponse
+from django.core.management import call_command
+from io import StringIO
+
+class PoolAdmin(admin.AdminSite):
+    site_header = 'NFL Pool Administration'
+    site_title = 'NFL Pool Administration'
+    site_index_title = 'NFL Pool Administration'
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                "update_points/",
+                self.admin_view(self.update_points_view),
+                name="update_points",
+            ),
+        ]
+        return custom_urls + urls
+
+    def update_points_view(self, request):
+        """AJAX view to run the command and return JSON output."""
+        output = StringIO()
+        try:
+            call_command("update_points_earned", stdout=output)
+            status = "success"
+        except Exception as e:
+            output.write(str(e))
+            status = "error"
+
+        return JsonResponse({
+            "status": status,
+            "output": output.getvalue(),
+        })
 
 
 @admin.register(Team)
@@ -37,10 +73,11 @@ class PickAdmin(admin.ModelAdmin):
     list_display = ("game", "picked_team", "user")
 
 
-
-
-
-
 @admin.register(Score)
 class ScoreAdmin(admin.ModelAdmin):
     list_display = ("week", "points")
+
+# Register models with custom admin site
+pool_admin_site = PoolAdmin(name="pooladmin")
+pool_admin_site.register(Pick)
+pool_admin_site.register(Game)

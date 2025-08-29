@@ -54,6 +54,6 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(CustomUser, CustomUserAdmin)
 
-# admin.site.site_title = ""
-admin.site.site_header = "NFL Pool"
-# admin.site.index_title = ""
+admin.site.site_title = "NFL Pool Administration"
+admin.site.site_header = "NFL Pool Administration"
+admin.site.index_title = "NFL Pool Administration"

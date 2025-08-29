@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 from accounts.views import CustomPasswordChangeView  # wherever your view is
-
+from pool.admin import pool_admin_site
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -12,6 +12,8 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     path("", include("pool.urls")),
     # path("pool/", include("pool.urls")),
+    path("pooladmin/", pool_admin_site.urls),  # <- important
+
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,29 @@
+{% extends "admin/index.html" %}
+{% block content %}
+<span style="color:red">**Run Update Points Earned after any change to game or pick data in admin**</span>
+<div style="margin-top:1em; margin-bottom:1em;">
+  <button id="update-points-btn" class="button">Update Points Earned</button>
+</div>
+
+{{ block.super }}
+
+<div id="update-points-modal" style="display:none; position:fixed; top:10%; left:10%; width:80%; height:70%; background:white; border:2px solid #888; padding:1em; overflow:auto; z-index:1000;">
+  <h2>Update Points Output</h2>
+  <pre id="update-points-output" style="background:#f9f9f9; padding:1em; border:1px solid #ccc;"></pre>
+  <button onclick="document.getElementById('update-points-modal').style.display='none';">Close</button>
+</div>
+
+<script>
+document.getElementById('update-points-btn').addEventListener('click', function() {
+    fetch("{% url 'pooladmin:update_points' %}")
+        .then(response => response.json())
+        .then(data => {
+            let output = document.getElementById('update-points-output');
+            output.textContent = data.output;
+            document.getElementById('update-points-modal').style.display = 'block';
+        });
+});
+</script>
+
+
+{% endblock content %}

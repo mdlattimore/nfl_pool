@@ -26,9 +26,16 @@ class Command(BaseCommand):
             correct_picks = [p for p in picks if p.picked_team_id == game.winner_id]
 
             # Update points_earned for all picks
+            # for pick in picks:
+            #     pick.points_earned = game.points if pick.picked_team_id == game.winner_id else 0
+            #     total_updated += 1
+            #     pick.save()
             for pick in picks:
-                pick.points_earned = game.points if pick.picked_team_id == game.winner_id else 0
-                total_updated += 1
+                if pick.picked_team_id == game.winner_id:
+                    pick.points_earned = game.points
+                else:
+                    pick.points_earned = 0
+                    pick.bonus_points = 0  # <-- clear stale bonus
                 pick.save()
 
             # Apply bonus if exactly one correct pick exists
