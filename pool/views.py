@@ -13,6 +13,7 @@ from pool.forms import PickFormSet
 from pool.models import Game, Pick
 from pool.utils import get_week_info
 from django.db.models import Count
+from django_project.settings import ENFORCE_PICK_WINDOW
 
 
 class PickView(LoginRequiredMixin, View):
@@ -89,8 +90,12 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         # Force open/closed state for testing
         # Comment to enforce pick window
         # Uncomment to allow picks during window
-        # week_info['is_pick_open'] = True
-        # week_info['is_pick_closed'] = False
+        if ENFORCE_PICK_WINDOW == False:
+            week_info['is_pick_open'] = True
+            week_info['is_pick_closed'] = False
+            print("Pick Window NOT enforced")
+        else:
+            print("Pick Window enforced")
 
         if week_info:
             context['current_week'] = week_info['week']

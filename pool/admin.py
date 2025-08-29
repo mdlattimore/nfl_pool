@@ -64,6 +64,7 @@ class GameAdminForm(forms.ModelForm):
 class GameAdmin(admin.ModelAdmin):
     form = GameAdminForm
     list_display = ("home_team", "away_team", "week")
+    list_filter = ("week",)  # adds a sidebar filter for weeks
 
 
 

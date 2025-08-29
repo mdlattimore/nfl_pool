@@ -234,3 +234,5 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SIGNUP_FORM_CLASS = 'accounts.signup_forms.CustomSignupForm'
 
+# Change to False to allow picks outside pick window
+ENFORCE_PICK_WINDOW = True
