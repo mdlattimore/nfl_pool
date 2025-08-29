@@ -359,11 +359,14 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
 
 
+
+
     def get_all_weeks_game_picks_summary(self):
         users = User.objects.all()
 
         # Grab all distinct weeks, descending
-        weeks = Game.objects.values_list("week", flat=True).distinct().order_by("-week")
+        weeks = Game.objects.values_list("week", flat=True).distinct().order_by(
+            "-week")
 
         all_summaries = []
 
@@ -384,30 +387,39 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                 .annotate(count=Count("id"))
                 .filter(count=1)
             )
-            unique_set = {(u["game_id"], u["picked_team_id"]) for u in unique_map}
+            unique_set = {(u["game_id"], u["picked_team_id"]) for u in
+                unique_map}
 
             for user in users:
-                picks = Pick.objects.filter(user=user, game__in=games).select_related(
+                picks = Pick.objects.filter(user=user,
+                                            game__in=games).select_related(
                     "picked_team", "game", "game__winner"
                 )
                 picks_by_game = {pick.game_id: pick for pick in picks}
 
-                # count wins for perfect week
-                wins = sum(
-                    1 for pick in picks if pick.picked_team_id == pick.game.winner_id
-                )
-
-                perfect_week_bonus = 3 if wins and wins == len(games) else 0
-
-                # --- recompute points: base + unique bonus ---
+                # --- Recompute points per pick ---
                 earned_points = 0
+                wins = 0
+
                 for pick in picks:
+                    # Base points
                     base = pick.game.points if pick.picked_team_id == pick.game.winner_id else 0
-                    unique_bonus = (
-                        2 if (pick.game_id, pick.picked_team_id) in unique_set and base > 0 else 0
-                    )
+                    if base > 0:
+                        wins += 1
+
+                    # Unique bonus (only if pick is correct and unique)
+                    unique_bonus = 2 if (pick.game_id,
+                        pick.picked_team_id) in unique_set and base > 0 else 0
+
+                    # Update Pick.bonus_points if it differs
+                    if pick.bonus_points != unique_bonus:
+                        pick.bonus_points = unique_bonus
+                        pick.save(update_fields=["bonus_points"])
+
                     earned_points += base + unique_bonus
 
+                # Perfect week bonus
+                perfect_week_bonus = 3 if wins and wins == len(games) else 0
                 earned_points += perfect_week_bonus
 
                 week_summary.append({
@@ -436,3 +448,4 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             })
 
         return all_summaries
+
