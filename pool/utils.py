@@ -2,7 +2,7 @@ from datetime import datetime, time, timedelta, timezone as dt_timezone
 import pytz
 from django.utils import timezone
 from django.db.models import Min, Max
-from .models import Game
+from .models import Game, PoolSettings
 
 def get_week_info():
     now = timezone.now()
@@ -43,3 +43,6 @@ def get_week_info():
         'is_pick_open': pick_open <= now < pick_close,
         'is_pick_closed': now >= pick_close,
     }
+
+def get_pool_settings():
+    return PoolSettings.objects.first() or PoolSettings(enforce_pick_window=True)

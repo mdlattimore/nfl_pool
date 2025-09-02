@@ -1,7 +1,7 @@
 # pool/admin.py
 
 from django.contrib import admin, messages
-from .models import Team, Game, Pick, Score
+from .models import Team, Game, Pick, Score, PoolSettings
 from django import forms
 from django.urls import path
 from django.http import JsonResponse
@@ -77,6 +77,13 @@ class PickAdmin(admin.ModelAdmin):
 @admin.register(Score)
 class ScoreAdmin(admin.ModelAdmin):
     list_display = ("week", "points")
+
+@admin.register(PoolSettings)
+class PoolSettingsAdmin(admin.ModelAdmin):
+    def has_add_permission(self, request):
+        # only allow adding if no instance exists
+        return not PoolSettings.objects.exists()
+
 
 # Register models with custom admin site
 pool_admin_site = PoolAdmin(name="pooladmin")

@@ -71,6 +71,26 @@ class Pick(models.Model):
         return f"{self.user.username} picked {self.picked_team} for {self.game}"
 
 
+class PoolSettings(models.Model):
+    enforce_pick_window = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        # enforce only one row
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        # prevent deletion
+        pass
+
+    def __str__(self):
+        return "Pool Settings"
+
+    class Meta:
+        verbose_name = "Pool Settings"
+        verbose_name_plural = "Pool Settings"
+
+
 class Score(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     week = models.PositiveSmallIntegerField()
@@ -78,3 +98,5 @@ class Score(models.Model):
 
     class Meta:
         unique_together = ("user", "week")
+
+
