@@ -100,3 +100,12 @@ class Score(models.Model):
         unique_together = ("user", "week")
 
 
+class Email(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    data = models.JSONField()
+    text = models.TextField()
+
+    def __str__(self):
+        return f"Email generated {self.date}"
+
+

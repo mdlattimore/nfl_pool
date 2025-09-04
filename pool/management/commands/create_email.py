@@ -76,7 +76,7 @@ def get_all_weeks_summary():
             earned_points += perfect_week_bonus
 
             week_summary.append({
-                "user": user.display_name,
+                "user": user.fname,
                 "picks": [picks_by_game.get(game.id) for game in games],
                 "points_earned": earned_points,
                 "week": week,
@@ -267,10 +267,19 @@ class Command(BaseCommand):
         full_results_package = build_full_results_package(serialized)
         trimmed_full_results_package = trim_full_results_for_llm(
             full_results_package)
-        last_three_weeks = {
-            'weeks': trimmed_full_results_package["weeks"][0:2],
-            'cumulative_standings': trimmed_full_results_package['cumulative_standings'],
-        }
+
+        # avoid list index error if we are less than 3 weeks into season
+        if len(trimmed_full_results_package["weeks"]) >= 3:
+            last_three_weeks = {
+                'weeks': trimmed_full_results_package["weeks"][0:2],
+                'cumulative_standings': trimmed_full_results_package['cumulative_standings'],
+            }
+        else:
+            last_three_weeks = {
+                'weeks': trimmed_full_results_package["weeks"],
+                'cumulative_standings': trimmed_full_results_package[
+                    'cumulative_standings'],
+            }
         prompt_data = trim_full_results_for_llm(last_three_weeks)
 
 
@@ -287,8 +296,9 @@ class Command(BaseCommand):
         just the top few. Do not invent: e.g. don't describe a team as an "underdog", 
         don't speculate as to whether games were close or came down to the last 
         minute, or anything else of the sort. You do not have access to adequate 
-        information. Just use first names (not first name, last initial). Response 
-        should be formatted in Markdown.
+        information. Just use first names (not first name, last initial). 
+        Sign my name as 'Mark' and do not include title like 
+        'Commissioner'. Response should be formatted in Markdown.
 
         Tone:
         Light, witty
@@ -301,12 +311,17 @@ class Command(BaseCommand):
 
 
         """
-        with open("examine_results.json", "w") as outfile:
-            json.dump(trimmed_full_results_package, outfile)
+
         response = client.responses.create(
             model="gpt-4o-mini",
             input=prompt,
             temperature=.5
         )
+
+        email = Email(
+            data = prompt_data,
+            text = response.output_text
+        )
+        email.save()
 
         print(response.output_text)

@@ -11,6 +11,13 @@ class CustomUser(AbstractUser):
             return f"{self.first_name} {self.last_name[0]}."
         return self.username  # fallback if names aren't set
 
+    @property
+    def fname(self):
+        if self.first_name:
+            return f"{self.first_name}"
+        else:
+            return self.username
+
     def __str__(self):
         return self.username
 
