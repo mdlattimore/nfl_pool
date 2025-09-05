@@ -10,7 +10,7 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from pool.forms import PickFormSet
-from pool.models import Game, Pick
+from pool.models import Game, Pick, PoolSettings
 from pool.utils import get_week_info, get_pool_settings
 from django.db.models import Count
 from django_project.settings import ENFORCE_PICK_WINDOW
@@ -86,7 +86,6 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         # --- Current week info ---
         week_info = get_week_info()
-
         # Force open/closed state for testing
         # Comment to enforce pick window
         # Uncomment to allow picks during window
@@ -413,5 +412,26 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                 "summary": week_summary,
             })
 
+        # prevents current week picks from being visible to group while pick
+        # window is open. If the pick window is open and the first item in
+        # all_summaries has the same week as the current week,
+        # then all_summaries[1:] are shown, so the current week is hidden.
+        # But when the pick window closes, the conditional fails and
+        # all_summaries are displayed.
+
+        week_info = get_week_info()
+        print((week_info['week'] == all_summaries[0]['week']) and week_info[
+            'is_pick_open'])
+        # if week_info['is_pick_open'] and week_info['week'] == all_summaries[0]['week']:
+        #     return all_summaries[1:]
+
+        if (
+                all_summaries
+                and week_info['is_pick_open']
+                and week_info['week'] == all_summaries[0]['week']
+        ):
+            return all_summaries[1:]
+
         return all_summaries
+
 
