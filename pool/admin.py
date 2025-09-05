@@ -7,6 +7,8 @@ from django.urls import path
 from django.http import JsonResponse
 from django.core.management import call_command
 from io import StringIO
+from markdownx.admin import MarkdownxModelAdmin
+
 
 class PoolAdmin(admin.AdminSite):
     site_header = 'NFL Pool Administration'
@@ -99,7 +101,7 @@ class PoolSettingsAdmin(admin.ModelAdmin):
         return False
 
 @admin.register(Email)
-class EmailAdmin(admin.ModelAdmin):
+class EmailAdmin(MarkdownxModelAdmin):
     list_display = ("date",)
 
 @admin.register(WeeklyNote)

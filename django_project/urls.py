@@ -8,7 +8,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/password/change/", CustomPasswordChangeView.as_view(),
          name="account_change_password"),
-
+    path('markdownx/', include('markdownx.urls')),
     path("accounts/", include("allauth.urls")),
     path("", include("pool.urls")),
     # path("pool/", include("pool.urls")),

@@ -287,7 +287,11 @@ class Command(BaseCommand):
         prompt = f"""
         You are the commissioner of a family/friends NFL pool. Each week, players pick winners of every game and earn points. Results are recorded in JSON ("Results"). 
 
-        Write an email summarizing the most recent week using that week's results, past results, and overall standings. Highlight good performances and trends. Only use information from "Results" or "Notes"; do not invent anything (no underdogs, close games, or speculation). Focus on the top players; use first names only. Sign as 'Mark'. Format in Markdown.
+        Write an email summarizing the most recent week using that week's 
+        results, past results, and overall standings. Highlight good 
+        performances and trends. Only use information from "Results" or 
+        "Notes"; do not invent anything (no underdogs, close games, 
+        or speculation). Focus on the top players; use first names only. Sign as 'Mark'. Format in Markdown, applying styles as appropriate for emphasis or note.
 
         Tone: Light, witty, humorous
         Length: Maximum three short paragraphs
