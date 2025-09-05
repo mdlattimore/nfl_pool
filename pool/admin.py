@@ -1,7 +1,7 @@
 # pool/admin.py
 
 from django.contrib import admin, messages
-from .models import Team, Game, Pick, Score, PoolSettings, Email
+from .models import Team, Game, Pick, Score, PoolSettings, Email, WeeklyNote
 from django import forms
 from django.urls import path
 from django.http import JsonResponse
@@ -78,15 +78,34 @@ class PickAdmin(admin.ModelAdmin):
 class ScoreAdmin(admin.ModelAdmin):
     list_display = ("week", "points")
 
+# @admin.register(PoolSettings)
+# class PoolSettingsAdmin(admin.ModelAdmin):
+#     def has_add_permission(self, request):
+#         # only allow adding if no instance exists
+#         return not PoolSettings.objects.exists()
+
 @admin.register(PoolSettings)
 class PoolSettingsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'enforce_pick_window', 'site_maintenance')
+    list_editable = ('enforce_pick_window', 'site_maintenance')
+    list_display_links = ('id',)
+
     def has_add_permission(self, request):
-        # only allow adding if no instance exists
+        """Allow only one PoolSettings instance."""
         return not PoolSettings.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        """Prevent deletion of PoolSettings."""
+        return False
 
 @admin.register(Email)
 class EmailAdmin(admin.ModelAdmin):
     list_display = ("date",)
+
+@admin.register(WeeklyNote)
+class WeeklyNoteAdmin(admin.ModelAdmin):
+    list_display = ("week",)
+
 
 
 # Register models with custom admin site

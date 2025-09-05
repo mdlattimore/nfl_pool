@@ -73,6 +73,10 @@ class Pick(models.Model):
 
 class PoolSettings(models.Model):
     enforce_pick_window = models.BooleanField(default=True)
+    site_maintenance = models.BooleanField(
+        default=False,
+        help_text="If enabled, only superusers can access the site. Others see a maintenance page."
+    )
 
     def save(self, *args, **kwargs):
         # enforce only one row
@@ -108,4 +112,9 @@ class Email(models.Model):
     def __str__(self):
         return f"Email generated {self.date}"
 
+class WeeklyNote(models.Model):
+    week = models.PositiveSmallIntegerField()
+    notes = models.TextField()
 
+    def __str__(self):
+        return f"Week {self.week} Notes"

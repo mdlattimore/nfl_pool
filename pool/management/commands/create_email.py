@@ -11,7 +11,6 @@ from openai import OpenAI
 import os
 
 key = os.getenv('OPENAI_API_KEY')
-print(key)
 
 
 def get_all_weeks_summary():
@@ -281,35 +280,23 @@ class Command(BaseCommand):
                     'cumulative_standings'],
             }
         prompt_data = trim_full_results_for_llm(last_three_weeks)
-
+        note_obj = WeeklyNote.objects.filter(week=prompt_data["weeks"][0][
+            "week"])
+        notes = note_obj.values_list('notes', flat=True)
 
         prompt = f"""
-        You are the 'commissioner' of an NFL pool made up of family and friends (players).
-        Every week, the players pick the winner of every NFL game for that week, 
-        earning points for correct picks. Each week, those results are summarized and 
-        recorded in json format ("Results"). Write an email summarizing the results 
-        of the most recent week using that week's results, past week's results, and overall 
-        standings, highlighting good performances and noting trends (using past 
-        results for comparison). Don't improvise. Text should flow like a 
-        narrative, not bullet points. All statements must be supportable by 
-        "Results". You do not need to mention every player, 
-        just the top few. Do not invent: e.g. don't describe a team as an "underdog", 
-        don't speculate as to whether games were close or came down to the last 
-        minute, or anything else of the sort. You do not have access to adequate 
-        information. Just use first names (not first name, last initial). 
-        Sign my name as 'Mark' and do not include title like 
-        'Commissioner'. Response should be formatted in Markdown.
+        You are the commissioner of a family/friends NFL pool. Each week, players pick winners of every game and earn points. Results are recorded in JSON ("Results"). 
 
-        Tone:
-        Light, witty
+        Write an email summarizing the most recent week using that week's results, past results, and overall standings. Highlight good performances and trends. Only use information from "Results" or "Notes"; do not invent anything (no underdogs, close games, or speculation). Focus on the top players; use first names only. Sign as 'Mark'. Format in Markdown.
 
-        Length:
-        Maximum three short paragraphs
+        Tone: Light, witty, humorous
+        Length: Maximum three short paragraphs
 
         Results:
         {prompt_data}
 
-
+        Notes:
+        {notes}
         """
 
         response = client.responses.create(
