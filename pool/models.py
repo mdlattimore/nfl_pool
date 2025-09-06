@@ -109,7 +109,7 @@ class Score(models.Model):
 
 class Email(models.Model):
     date = models.DateTimeField(auto_now_add=True)
-    data = models.JSONField()
+    data = models.JSONField(null=True, blank=True)
     # text = models.TextField()
     text = MarkdownxField()
 

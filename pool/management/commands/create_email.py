@@ -311,5 +311,7 @@ class Command(BaseCommand):
             text=response.output_text
         )
         email.save()
-
+        self.stdout.write(self.style.SUCCESS(
+            response.output_text
+        ))
         print(response.output_text)

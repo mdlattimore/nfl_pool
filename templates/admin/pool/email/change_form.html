@@ -1,0 +1,9 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block submit_buttons_bottom %}
+    {{ block.super }}
+    {% if show_save_and_send %}
+        <input type="submit" value="{% trans 'Save and send email' %}" class="default" name="_saveandsend">
+    {% endif %}
+{% endblock %}
