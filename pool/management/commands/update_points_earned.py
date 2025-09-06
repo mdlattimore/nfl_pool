@@ -1,11 +1,12 @@
-from django.core.management.base import BaseCommand
-from pool.models import Game, Pick
 from django.contrib.auth import get_user_model
-import sys
+from django.core.management.base import BaseCommand
+
+from pool.models import Game, Pick
 
 User = get_user_model()
 
 UNIQUE_CORRECT_BONUS = 2
+
 
 class Command(BaseCommand):
     help = "Update points_earned and apply unique correct pick bonuses."
@@ -23,13 +24,9 @@ class Command(BaseCommand):
             picks = list(Pick.objects.filter(game=game))
 
             # Identify correct picks
-            correct_picks = [p for p in picks if p.picked_team_id == game.winner_id]
+            correct_picks = [p for p in picks if
+                p.picked_team_id == game.winner_id]
 
-            # Update points_earned for all picks
-            # for pick in picks:
-            #     pick.points_earned = game.points if pick.picked_team_id == game.winner_id else 0
-            #     total_updated += 1
-            #     pick.save()
             for pick in picks:
                 if pick.picked_team_id == game.winner_id:
                     pick.points_earned = game.points
@@ -52,15 +49,15 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(
             f"Finished updating {total_updated} picks and awarded {total_bonus_awarded} unique correct bonuses."
         ))
-#############################
+        #############################
         for week in weeks_played:
             games = Game.objects.filter(week=week)
             for user in User.objects.all():
                 wins = 0
-                for pick in Pick.objects.filter(game__in=games).filter(user=user):
+                for pick in Pick.objects.filter(game__in=games).filter(
+                        user=user):
                     if pick.picked_team_id == pick.game.winner_id:
                         wins += 1
 
                 if len(games) == wins:
                     self.stdout.write(f"{week}: {user.username} wins!")
-

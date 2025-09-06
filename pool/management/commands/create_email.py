@@ -1,11 +1,9 @@
-import json
-
-from django.core.management.base import BaseCommand
-from pool.models import Game, Pick
-from pool.models import *
 from django.contrib.auth import get_user_model
+from django.core.management.base import BaseCommand
 from django.db.models import Count
-from pprint import pprint
+
+from pool.models import *
+
 User = get_user_model()
 from openai import OpenAI
 import os
@@ -102,7 +100,6 @@ def get_all_weeks_summary():
     return all_summaries
 
 
-
 def serialize_weeks_summary(raw_summary):
     serialized = []
 
@@ -134,6 +131,8 @@ def serialize_weeks_summary(raw_summary):
 
             picks = []
             for pick in user_summary["picks"]:
+                if pick is None:
+                    continue  # skip missing picks
                 winner = game_winners.get(pick.game.id)
                 is_correct = (winner is not None and str(pick.picked_team) ==
                               winner)
@@ -174,8 +173,9 @@ def build_full_results_package(weeks_summary):
     """
     # Detect if already serialized (list of dicts with "games" key)
     already_serialized = (
-        isinstance(weeks_summary, list) and
-        all(isinstance(week, dict) and "games" in week for week in weeks_summary)
+            isinstance(weeks_summary, list) and
+            all(isinstance(week, dict) and "games" in week for week in
+                weeks_summary)
     )
 
     if not already_serialized:
@@ -195,12 +195,12 @@ def build_full_results_package(weeks_summary):
     package = {
         "weeks": weeks_summary,
         "cumulative_standings": [
-            {"user": user, "points": pts} for user, pts in sorted(cumulative.items(), key=lambda x: -x[1])
+            {"user": user, "points": pts} for user, pts in
+            sorted(cumulative.items(), key=lambda x: -x[1])
         ]
     }
 
     return package
-
 
 
 def trim_full_results_for_llm(full_results):
@@ -255,10 +255,6 @@ def trim_full_results_for_llm(full_results):
 class Command(BaseCommand):
     help = "Quickly generate a past week's games, picks, and winners for testing."
 
-
-
-
-
     def handle(self, *args, **options):
         client = OpenAI(api_key=key)
         raw_summaries = get_all_weeks_summary()
@@ -271,7 +267,8 @@ class Command(BaseCommand):
         if len(trimmed_full_results_package["weeks"]) >= 3:
             last_three_weeks = {
                 'weeks': trimmed_full_results_package["weeks"][0:2],
-                'cumulative_standings': trimmed_full_results_package['cumulative_standings'],
+                'cumulative_standings': trimmed_full_results_package[
+                    'cumulative_standings'],
             }
         else:
             last_three_weeks = {
@@ -310,8 +307,8 @@ class Command(BaseCommand):
         )
 
         email = Email(
-            data = prompt_data,
-            text = response.output_text
+            data=prompt_data,
+            text=response.output_text
         )
         email.save()
 

@@ -40,6 +40,10 @@
                             Hi, {{ user.first_name }}!
                         {% endif %}
                     </li>
+                    <li class="nav-item">
+                        {#            <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Home</a>#}
+
+                    </li>
                     {% if user.is_superuser %}
                         <li class="nav-item">&nbsp;&nbsp;<a href="{% url 'admin:index' %}">Admin</a></li>
                     {% endif %}
@@ -78,6 +82,7 @@
 {% endblock nav %}
 
 <div class="container">
+<p class="display-6 text-center">Week {{ current_week }}</p>
     {% block content %}
         <p>Default content...</p>
     {% endblock content %}

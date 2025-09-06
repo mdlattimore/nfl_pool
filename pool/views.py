@@ -3,17 +3,15 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Sum
+from django.db.models import Count
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView
 
 from pool.forms import PickFormSet
-from pool.models import Game, Pick, PoolSettings
+from pool.models import Game, Pick
 from pool.utils import get_week_info, get_pool_settings
-from django.db.models import Count
-from django_project.settings import ENFORCE_PICK_WINDOW
 
 
 class PickView(LoginRequiredMixin, View):
@@ -97,13 +95,6 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         else:
             print("Pick Window enforced")
 
-        # if ENFORCE_PICK_WINDOW == False:
-        #     week_info['is_pick_open'] = True
-        #     week_info['is_pick_closed'] = False
-        #     print("Pick Window NOT enforced")
-        # else:
-        #     print("Pick Window enforced")
-
         if week_info:
             context['current_week'] = week_info['week']
             context['pick_open'] = week_info['pick_open']
@@ -133,12 +124,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['past_picks'] = past_picks
         context['total_points'] = sum(p.total_points for p in past_picks)
 
-
         # --- Weekly Picks (All Users) ---
         week_info = get_week_info()
-
-        # week = int(kwargs.get('week', week_info['week'] if week_info else 1))
-        # context['week_game_summary'] = self.get_week_game_picks_summary(week)
 
         context[
             'all_weeks_game_summary'] = self.get_all_weeks_game_picks_summary()
@@ -160,8 +147,6 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                             'game__away_team', 'game__winner')
             .order_by('user__username', 'game__game_time')
         )
-
-
 
     def get_overall_standings(self):
         UNIQUE_BONUS = 2  # keep in sync with your rules
@@ -214,7 +199,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
             for p in picks:
                 correct = (
-                            p.picked_team_id == p.game.winner_id and p.game.winner_id is not None)
+                        p.picked_team_id == p.game.winner_id and p.game.winner_id is not None)
                 base = p.game.points if correct else 0
                 unique_bonus = UNIQUE_BONUS if correct and (p.game_id,
                     p.picked_team_id) in unique_set else 0
@@ -320,11 +305,6 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                 game.id].picked_team.id} if game.id in picks_by_game else {}
             for game in games
         ]
-
-
-
-
-
 
     def get_all_weeks_game_picks_summary(self):
         users = User.objects.all()
@@ -433,5 +413,3 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             return all_summaries[1:]
 
         return all_summaries
-
-
