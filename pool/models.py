@@ -3,7 +3,6 @@ from django.db import models
 from django.db.models import TextField
 from markdownx.models import MarkdownxField
 
-
 User = get_user_model()
 
 
@@ -115,6 +114,7 @@ class Email(models.Model):
 
     def __str__(self):
         return f"Email generated {self.date}"
+
 
 class WeeklyNote(models.Model):
     week = models.PositiveSmallIntegerField()

@@ -1,9 +1,4 @@
-{#{% for pick in past_picks %}#}
-{#    <li class="{% if pick.points_earned > 0 %}text-success{% else %}text-danger{% endif %}">#}
-{#        Week {{ pick.game.week }}: {{ pick.game.away_team.name }} @ {{ pick.game.home_team.name }} –#}
-{#        You picked {{ pick.picked_team.name }} ({{ pick.points_earned }} points)#}
-{#    </li>#}
-{#{% endfor %}#}
+
 
 {% block content %}
     <br>
@@ -24,9 +19,9 @@
                 <th scope="col">Winner</th>
                 <th scope="col">Points</th>
                 </thead>
-                            {% for pick in past_picks %}
+                {% for pick in past_picks %}
 
-                <tbody>
+                    <tbody>
                     <td></td>
                     <td>{{ pick.game.week }}</td>
                     <td>{{ pick.game.home_team.name }}</td>
@@ -38,8 +33,8 @@
                     </td>
                     <td>{{ pick.game.winner }}</td>
                     <td>{{ pick.total_points }}</td>
-                </tbody>
-                            {% endfor %}
+                    </tbody>
+                {% endfor %}
 
             </table>
         </div>

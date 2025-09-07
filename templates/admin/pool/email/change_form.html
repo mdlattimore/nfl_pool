@@ -1,9 +1,40 @@
+{#{% extends "admin/change_form.html" %}#}
+{#{% load i18n %}#}
+{##}
+{#{% block submit_buttons_bottom %}#}
+{#    {{ block.super }}#}
+{#    {% if show_save_and_send %}#}
+{#        <input type="submit" value="{% trans 'Save and send email' %}" class="default" name="_saveandsend">#}
+{#    {% endif %}#}
+{#{% endblock %}#}
+
 {% extends "admin/change_form.html" %}
 {% load i18n %}
 
 {% block submit_buttons_bottom %}
     {{ block.super }}
+
     {% if show_save_and_send %}
-        <input type="submit" value="{% trans 'Save and send email' %}" class="default" name="_saveandsend">
+    <div class="submit-row">
+        <button type="submit" name="_saveandsend" class="default" id="save-and-send-btn" style="background-color: #0d6efd; color: white; border-radius: 5px; padding:7px 10px">
+            {% trans "Save and send" %}
+        </button>
+    </div>
+{#        <input type="submit" value="{% trans 'Save and send email' %}" class="default btn btn-primary" name="_saveandsend" id="save-and-send-btn">#}
+
     {% endif %}
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const btn = document.getElementById("save-and-send-btn");
+        if (btn) {
+            btn.addEventListener("click", function (e) {
+                const confirmed = confirm("Are you sure you want to send this email to ALL users?");
+                if (!confirmed) {
+                    e.preventDefault();
+                }
+            });
+        }
+    });
+    </script>
 {% endblock %}

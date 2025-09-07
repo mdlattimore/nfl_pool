@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
+
 from accounts.views import CustomPasswordChangeView  # wherever your view is
 from pool.admin import pool_admin_site
 
@@ -20,5 +21,5 @@ if settings.DEBUG:
     import debug_toolbar
 
     urlpatterns = [
-        path("__debug__/", include(debug_toolbar.urls)),
-    ] + urlpatterns
+                      path("__debug__/", include(debug_toolbar.urls)),
+                  ] + urlpatterns

@@ -1,34 +1,36 @@
 {% extends "_base.html" %}
 
 {% block content %}
-<ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
-    <li class="nav-item">
-        <a class="nav-link active" id="this-week-tab" data-bs-toggle="tab" href="#this-week" role="tab">This Week's Games</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="past-picks-tab" data-bs-toggle="tab" href="#past-picks" role="tab">Past Picks</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="summary-tab" data-bs-toggle="tab" href="#summary" role="tab">Weekly Results</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="standings-tab" data-bs-toggle="tab" href="#standings" role="tab">Season Standings</a>
-    </li>
-</ul>
+    <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="this-week-tab" data-bs-toggle="tab" href="#this-week" role="tab">This Week's
+                Games</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="past-picks-tab" data-bs-toggle="tab" href="#past-picks" role="tab">Past Picks</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="summary-tab" data-bs-toggle="tab" href="#summary" role="tab">Weekly Results</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="standings-tab" data-bs-toggle="tab" href="#standings" role="tab">Season
+                Standings</a>
+        </li>
+    </ul>
 
-<div class="tab-content mt-3" id="dashboardTabContent">
-    <div class="tab-pane fade show active" id="this-week" role="tabpanel">
-        {% include "pool/make_picks.html" %}
+    <div class="tab-content mt-3" id="dashboardTabContent">
+        <div class="tab-pane fade show active" id="this-week" role="tabpanel">
+            {% include "pool/make_picks.html" %}
+        </div>
+        <div class="tab-pane fade" id="past-picks" role="tabpanel">
+            {% include "pool/past_picks_table.html" %}
+        </div>
+        <div class="tab-pane fade" id="summary" role="tabpanel">
+            {% include "pool/week_summary.html" %}
+        </div>
+        <div class="tab-pane fade" id="standings" role="tabpanel">
+            {% include "pool/standings_table.html" %}
+        </div>
     </div>
-    <div class="tab-pane fade" id="past-picks" role="tabpanel">
-        {% include "pool/past_picks_table.html" %}
-    </div>
-    <div class="tab-pane fade" id="summary" role="tabpanel">
-        {% include "pool/week_summary.html" %}
-    </div>
-    <div class="tab-pane fade" id="standings" role="tabpanel">
-        {% include "pool/standings_table.html" %}
-    </div>
-</div>
 
 {% endblock content %}

@@ -3,8 +3,10 @@
 
 
 import json
+
 from django.core.management.base import BaseCommand, CommandError
 from django.utils.dateparse import parse_datetime
+
 from pool.models import Team, Game
 
 
@@ -12,7 +14,8 @@ class Command(BaseCommand):
     help = "Import season's NFL schedule from a JSON file."
 
     def add_arguments(self, parser):
-        parser.add_argument('file_path', type=str, help='Path to the JSON schedule file for the week')
+        parser.add_argument('file_path', type=str,
+                            help='Path to the JSON schedule file for the week')
 
     def handle(self, *args, **options):
         file_path = options['file_path']
@@ -52,7 +55,8 @@ class Command(BaseCommand):
             except Team.DoesNotExist as e:
                 self.stderr.write(self.style.ERROR(f"Missing team: {e}"))
             except Exception as e:
-                self.stderr.write(self.style.ERROR(f"Error importing game: {e}"))
+                self.stderr.write(
+                    self.style.ERROR(f"Error importing game: {e}"))
 
         self.stdout.write(self.style.SUCCESS(f"Successfully imported "
                                              f"{created} games for season"))

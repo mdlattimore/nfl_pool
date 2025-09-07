@@ -24,7 +24,9 @@
 # pool/management/commands/recalculate_pick_points.py
 
 from django.core.management.base import BaseCommand
-from pool.models import Game, Pick
+
+from pool.models import Pick
+
 
 class Command(BaseCommand):
     help = "Recalculate points and correctness for all picks based on current game winners and points."

@@ -1,8 +1,10 @@
 # pool/management/commands/import_week_schedule.py
 
 import json
+
 from django.core.management.base import BaseCommand, CommandError
 from django.utils.dateparse import parse_datetime
+
 from pool.models import Team, Game
 
 
@@ -11,7 +13,8 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('week', type=int, help='Week number (e.g., 1)')
-        parser.add_argument('file_path', type=str, help='Path to the JSON schedule file for the week')
+        parser.add_argument('file_path', type=str,
+                            help='Path to the JSON schedule file for the week')
 
     def handle(self, *args, **options):
         week = options['week']
@@ -51,6 +54,8 @@ class Command(BaseCommand):
             except Team.DoesNotExist as e:
                 self.stderr.write(self.style.ERROR(f"Missing team: {e}"))
             except Exception as e:
-                self.stderr.write(self.style.ERROR(f"Error importing game: {e}"))
+                self.stderr.write(
+                    self.style.ERROR(f"Error importing game: {e}"))
 
-        self.stdout.write(self.style.SUCCESS(f"Successfully imported {created} games for week {week}"))
+        self.stdout.write(self.style.SUCCESS(
+            f"Successfully imported {created} games for week {week}"))

@@ -210,6 +210,8 @@ class PoolSettingsAdmin(admin.ModelAdmin):
 
 @admin.register(Email)
 class EmailAdmin(MarkdownxModelAdmin):
+    change_form_template = "admin/pool/email/change_form.html"  # custom template
+
     list_display = ("date",)
 
     def changeform_view(self, request, object_id=None, form_url="",

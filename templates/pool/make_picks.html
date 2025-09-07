@@ -1,48 +1,48 @@
-{%  load custom_tags %}
+{% load custom_tags %}
 
 
 
 {% block content %}
 
-<h1 class="display-6">Week {{ week }} Picks</h1>
+    <h1 class="display-6">Week {{ week }} Picks</h1>
     {% if messages %}
-      <ul>
-        {% for message in messages %}
-            {% if message.tags == 'error'%}
-            <li style="color:red">{{ message }}</li>
-            {% else %}
-            <li style="color:green">{{ message }}</li>
-            {% endif %}
-        {% endfor %}
-      </ul>
+        <ul>
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <li style="color:red">{{ message }}</li>
+                {% else %}
+                    <li style="color:green">{{ message }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
     {% endif %}
-<form method="post">
-    {% csrf_token %}
-    {{ formset.management_form }}
-    <table class="table table-striped">
-        <thead>
+    <form method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <table class="table table-striped">
+            <thead>
             <tr>
                 <th>Home</th>
                 <th>Away</th>
                 <th>Your Pick</th>
             </tr>
-        </thead>
-        <tbody>
-        {% for form, game in formset.forms|_zip:games %}
-            <tr>
-                <td>{{ game.home_team.name }}</td>
-                <td>{{ game.away_team.name }}</td>
-                <td>{{ form.picked_team|disable_if_closed:is_pick_open }}</td>
+            </thead>
+            <tbody>
+            {% for form, game in formset.forms|_zip:games %}
+                <tr>
+                    <td>{{ game.home_team.name }}</td>
+                    <td>{{ game.away_team.name }}</td>
+                    <td>{{ form.picked_team|disable_if_closed:is_pick_open }}</td>
 
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
-    {% if is_pick_open %}
-    <button type="submit" class="btn btn-primary">Save Picks</button>
-{% endif %}
-</form>
+        {% if is_pick_open %}
+            <button type="submit" class="btn btn-primary">Save Picks</button>
+        {% endif %}
+    </form>
 
 
 {% endblock content %}

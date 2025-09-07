@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.db.models import Count
 
@@ -175,7 +174,7 @@ def build_full_results_package(weeks_summary):
     already_serialized = (
             isinstance(weeks_summary, list) and
             all(isinstance(week, dict) and "games" in week for week in
-                weeks_summary)
+                    weeks_summary)
     )
 
     if not already_serialized:
@@ -284,11 +283,14 @@ class Command(BaseCommand):
         prompt = f"""
         You are the commissioner of a family/friends NFL pool. Each week, players pick winners of every game and earn points. Results are recorded in JSON ("Results"). 
 
-        Write an email summarizing the most recent week using that week's 
-        results, past results, and overall standings. Highlight good 
-        performances and trends. Only use information from "Results" or 
-        "Notes"; do not invent anything (no underdogs, close games, 
-        or speculation). Focus on the top players; use first names only. Sign as 'Mark'. Format in Markdown, applying styles as appropriate for emphasis or note.
+        Write an email summarizing the most recent week using that week's results, 
+        past results, and overall standings. Use a conversational tone. Don't use
+        the phrase 'NFL Pool' but rather use natural language (like 
+        ‘this week’s games,’ or ‘the pool’) instead of repeating it. Highlight good 
+        performances and trends. Only use information from "Results" or "Notes"; 
+        do not invent anything (no underdogs, close games, or speculation). 
+        Focus on the top players; use first names only. Sign as 'Mark'. Format 
+        in Markdown, applying styles as appropriate for emphasis or note.
 
         Tone: Light, witty, humorous
         Length: Maximum three short paragraphs

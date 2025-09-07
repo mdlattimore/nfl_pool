@@ -1,9 +1,9 @@
 from django import forms
-from allauth.account.adapter import get_adapter
-from allauth.account.utils import user_email, user_field
+
 
 class CustomSignupForm(forms.Form):
-    first_name = forms.CharField(max_length=30, label="First Name", required=True)
+    first_name = forms.CharField(max_length=30, label="First Name",
+                                 required=True)
     last_name = forms.CharField(max_length=30, label="Last Name", required=True)
 
     def signup(self, request, user):

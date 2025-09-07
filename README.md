@@ -3,4 +3,6 @@
 Web Framework: Django 5.2.5  
 Authentication: Django-allauth  
 Styling: Bootstrap 5  
-DB: Postgres  
+DB: Postgres (in production)
+Mail Client: MailJet  
+LLM: OpenAI "gpt-4o-mini"
