@@ -1,24 +1,25 @@
 # pool/admin.py
 
-from django.contrib import admin, messages
-from .models import Team, Game, Pick, Score, PoolSettings, Email, WeeklyNote
-from django import forms
-from django.urls import path
-from django.http import JsonResponse
-from django.core.management import call_command
+import re
 from io import StringIO
-from markdownx.admin import MarkdownxModelAdmin
+
 import markdown
-from django.urls import reverse
-from django.shortcuts import redirect
-from django.utils.safestring import mark_safe
+from django import forms
+from django.conf import settings
+from django.contrib import admin, messages
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
-from django.conf import settings
-import re
+from django.core.management import call_command
+from django.http import JsonResponse
+from django.shortcuts import redirect
+from django.urls import path
+from django.urls import reverse
+from markdownx.admin import MarkdownxModelAdmin
 
+from .models import Team, Game, Pick, Score, PoolSettings, Email
 
 User = get_user_model()
+
 
 def parse_markdown_email(md_text: str):
     """
@@ -40,7 +41,7 @@ def parse_markdown_email(md_text: str):
             if subject.lower().startswith("subject:"):
                 subject = subject[len("subject:"):].strip()
             # Everything after this line is the body
-            body_lines = lines[i+1:]
+            body_lines = lines[i + 1:]
             break
 
     body_md = "\n".join(body_lines).strip()
@@ -69,10 +70,10 @@ class PoolAdmin(admin.AdminSite):
             ),
             path("create_email/",
                  self.admin_view(self.create_email_view),
-                 name="create_email",),
+                 name="create_email", ),
             path("send_email/",
                  self.admin_view(self.send_email_view),
-                 name="send_email",),
+                 name="send_email", ),
         ]
         return custom_urls + urls
 
@@ -110,50 +111,41 @@ class PoolAdmin(admin.AdminSite):
             "output": rendered_output,
         })
 
-    # def send_email_view(self, request):
-    #     email_id = request.GET.get("id")
-    #     if not email_id:
-    #         messages.error(request, "No email ID provided.")
-    #         return redirect(request.META.get('HTTP_REFERER', '/admin/'))
-    #
-    #     try:
-    #         email = Email.objects.get(pk=email_id)
-    #         # TODO: your send logic here
-    #         messages.success(request, f"Email {email.pk} sent successfully!")
-    #         return redirect(f"/admin/pool/email/{email.pk}/change/")
-    #     except Email.DoesNotExist:
-    #         messages.error(request, "Email not found.")
-    #         return redirect(request.META.get('HTTP_REFERER', '/admin/'))
     def send_email_view(self, request):
         email_id = request.GET.get("id")
         if not email_id:
-            return JsonResponse(
-                {"status": "error", "message": "No email ID provided."})
+            messages.error(request, "No email ID provided.")
+            return redirect("admin:pool_email_changelist")
 
         try:
             email = Email.objects.get(pk=email_id)
             subject, plain_text, html_text = parse_markdown_email(email.text)
 
+            recipients = (
+                User.objects.filter(is_active=True)
+                .exclude(email="")
+                .values_list("email", flat=True)
+            )
 
-            # Send to all users
-            recipients = User.objects.filter(is_active=True).values_list(
-                "email", flat=True)
             for recipient in recipients:
                 send_mail(
                     subject=subject,
                     message=plain_text,
-                    html_message=html_text,  # HTML version
+                    html_message=html_text,
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[recipient],
                     fail_silently=False,
                 )
 
-            return JsonResponse({"status": "success",
-                                    "message": f"Email {email.pk} sent to all users."})
+            messages.success(
+                request,
+                f"Email '{subject}' sent to {len(recipients)} users."
+            )
+            return redirect("admin:pool_email_changelist")
 
         except Email.DoesNotExist:
-            return JsonResponse(
-                {"status": "error", "message": "Email not found."})
+            messages.error(request, "Email not found.")
+            return redirect("admin:pool_email_changelist")
 
 
 @admin.register(Team)
@@ -161,6 +153,7 @@ class TeamAdmin(admin.ModelAdmin):
     list_display = ("name",)
     ordering = ("name",)
     search_fields = ("name",)
+
 
 class GameAdminForm(forms.ModelForm):
     class Meta:
@@ -171,7 +164,8 @@ class GameAdminForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
             # Limit the winner choices to just home_team and away_team
-            self.fields['winner'].queryset = self.fields['winner'].queryset.filter(
+            self.fields['winner'].queryset = self.fields[
+                'winner'].queryset.filter(
                 pk__in=[self.instance.home_team_id, self.instance.away_team_id]
             )
 
@@ -183,8 +177,6 @@ class GameAdmin(admin.ModelAdmin):
     list_filter = ("week",)  # adds a sidebar filter for weeks
 
 
-
-
 @admin.register(Pick)
 class PickAdmin(admin.ModelAdmin):
     list_display = ("game", "picked_team", "user")
@@ -193,6 +185,7 @@ class PickAdmin(admin.ModelAdmin):
 @admin.register(Score)
 class ScoreAdmin(admin.ModelAdmin):
     list_display = ("week", "points")
+
 
 # @admin.register(PoolSettings)
 # class PoolSettingsAdmin(admin.ModelAdmin):
@@ -214,15 +207,18 @@ class PoolSettingsAdmin(admin.ModelAdmin):
         """Prevent deletion of PoolSettings."""
         return False
 
+
 @admin.register(Email)
 class EmailAdmin(MarkdownxModelAdmin):
     list_display = ("date",)
 
-    def changeform_view(self, request, object_id=None, form_url="", extra_context=None):
+    def changeform_view(self, request, object_id=None, form_url="",
+                        extra_context=None):
         """Pass flag to template to show Save and Send button."""
         extra_context = extra_context or {}
         extra_context["show_save_and_send"] = True
-        return super().changeform_view(request, object_id, form_url, extra_context=extra_context)
+        return super().changeform_view(request, object_id, form_url,
+                                       extra_context=extra_context)
 
     def response_change(self, request, obj):
         """Called after editing an existing email."""
@@ -237,8 +233,6 @@ class EmailAdmin(MarkdownxModelAdmin):
             obj.save()  # ensure object is saved and has a PK
             return redirect(f"{reverse('pooladmin:send_email')}?id={obj.id}")
         return super().response_add(request, obj, post_url_continue)
-
-
 
 
 # Register models with custom admin site
