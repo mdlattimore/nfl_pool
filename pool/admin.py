@@ -16,7 +16,7 @@ from django.urls import path
 from django.urls import reverse
 from markdownx.admin import MarkdownxModelAdmin
 
-from .models import Team, Game, Pick, Score, PoolSettings, Email
+from .models import Team, Game, Pick, Score, PoolSettings, Email, WeeklyNote
 
 User = get_user_model()
 
@@ -234,6 +234,9 @@ class EmailAdmin(MarkdownxModelAdmin):
             return redirect(f"{reverse('pooladmin:send_email')}?id={obj.id}")
         return super().response_add(request, obj, post_url_continue)
 
+@admin.register(WeeklyNote)
+class WeeklyNoteAdmin(MarkdownxModelAdmin):
+    list_display = ("week",)
 
 # Register models with custom admin site
 pool_admin_site = PoolAdmin(name="pooladmin")
