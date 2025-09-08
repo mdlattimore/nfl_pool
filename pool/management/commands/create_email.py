@@ -276,6 +276,10 @@ class Command(BaseCommand):
                     'cumulative_standings'],
             }
         prompt_data = trim_full_results_for_llm(last_three_weeks)
+
+        from pprint import pprint
+        pprint(prompt_data)
+
         note_obj = WeeklyNote.objects.filter(week=prompt_data["weeks"][0][
             "week"])
         notes = note_obj.values_list('notes', flat=True)
