@@ -72,6 +72,7 @@ def get_all_weeks_summary():
             earned_points += perfect_week_bonus
 
             week_summary.append({
+                "user_id": user.id,
                 "user": user.fname,
                 "picks": [picks_by_game.get(game.id) for game in games],
                 "points_earned": earned_points,
@@ -144,6 +145,7 @@ def serialize_weeks_summary(raw_summary):
                 })
 
             summaries.append({
+                "user_id": user_summary["user_id"],
                 "user": user,
                 "picks": picks,
                 "points_earned": user_summary["points_earned"],
@@ -183,19 +185,27 @@ def build_full_results_package(weeks_summary):
 
     # Build cumulative standings
     cumulative = {}
+    user_lookup = {}
     for week in weeks_summary:
         for user_summary in week['summary']:
-            user_email = user_summary['user']
+            # user_email = user_summary['user']
+            uid = user_summary["user_id"]
             points = user_summary['points_earned']
-            cumulative.setdefault(user_email, 0)
-            cumulative[user_email] += points
+            cumulative.setdefault(uid, 0)
+            cumulative[uid] += points
+            # Store name for later display
+            user_lookup[uid] = user_summary['user']
 
     # Build final package
     package = {
         "weeks": weeks_summary,
+        # "cumulative_standings": [
+        #     {"user": user, "points": pts} for user, pts in
+        #     sorted(cumulative.items(), key=lambda x: -x[1])
+        # ]
         "cumulative_standings": [
-            {"user": user, "points": pts} for user, pts in
-            sorted(cumulative.items(), key=lambda x: -x[1])
+            {"user": user_lookup[uid], "points": pts}
+            for uid, pts in sorted(cumulative.items(), key=lambda x: -x[1])
         ]
     }
 
