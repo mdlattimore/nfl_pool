@@ -119,7 +119,8 @@ class PoolAdmin(admin.AdminSite):
 
         try:
             email = Email.objects.get(pk=email_id)
-            subject, plain_text, html_text = parse_markdown_email(email.text)
+            subject, plain_text, html_text = parse_markdown_email(
+                email.email_text)
 
             recipients = (
                 User.objects.filter(is_active=True)
