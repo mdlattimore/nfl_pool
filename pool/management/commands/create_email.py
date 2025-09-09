@@ -330,13 +330,7 @@ class Command(BaseCommand):
         information from 
         "Results", 
         "Notes", 
-        or "External Data". 
-
-        From "External Data", you must quote or paraphrase at least one **concrete detail** 
-        (e.g., stats, a dramatic play, or a clear outcome) from a game recap. 
-        Keep it brief, but make sure it feels like a real highlight from the 
-        NFL week. It should be placed at a natural place in the email, 
-        not shoehorned in just anywhere.
+        
 
         Focus on the top players; use first names only. Sign as 'Mark'. 
         Format in Markdown, applying styles as appropriate for emphasis or note.
@@ -351,8 +345,17 @@ class Command(BaseCommand):
         {notes}
 
         External Data:
-        {truncated_game_recap_results}
+        None
         """
+
+        # Removed from prompt
+        # or "External Data".
+        # From "External Data", you must quote or paraphrase at least one **concrete detail**
+        # (e.g., stats, a dramatic play, or a clear outcome) from a game recap.
+        # Keep it brief, but make sure it feels like a real highlight from the
+        # NFL week. It should be placed at a natural place in the email,
+        # not shoehorned in just anywhere.
+
 
         email_response = client.responses.create(
             model="gpt-4o-mini",
