@@ -325,12 +325,18 @@ class Command(BaseCommand):
         past results, and overall standings. Use a conversational tone. Don't use
         the phrase 'NFL Pool' but rather use natural language (like 
         ‘this week’s games,’ or ‘the pool’) instead of repeating it. Highlight good 
-        performances and trends. Only use information from "Results", "Notes", 
+        performances and trends in the pool. Also highlight week over week 
+        improvements and encourage those who didn't perform well. Only use 
+        information from 
+        "Results", 
+        "Notes", 
         or "External Data". 
 
         From "External Data", you must quote or paraphrase at least one **concrete detail** 
         (e.g., stats, a dramatic play, or a clear outcome) from a game recap. 
-        Keep it brief, but make sure it feels like a real highlight from the NFL week. 
+        Keep it brief, but make sure it feels like a real highlight from the 
+        NFL week. It should be placed at a natural place in the email, 
+        not shoehorned in just anywhere.
 
         Focus on the top players; use first names only. Sign as 'Mark'. 
         Format in Markdown, applying styles as appropriate for emphasis or note.
