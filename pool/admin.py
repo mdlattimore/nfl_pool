@@ -9,6 +9,7 @@ from django.conf import settings
 from django.contrib import admin, messages
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.core.management import call_command
 from django.http import JsonResponse
 from django.shortcuts import redirect
@@ -128,15 +129,24 @@ class PoolAdmin(admin.AdminSite):
                 .values_list("email", flat=True)
             )
 
-            for recipient in recipients:
-                send_mail(
-                    subject=subject,
-                    message=plain_text,
-                    html_message=html_text,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[recipient],
-                    fail_silently=False,
-                )
+            # for recipient in recipients:
+            #     send_mail(
+            #         subject=subject,
+            #         message=plain_text,
+            #         html_message=html_text,
+            #         from_email=settings.DEFAULT_FROM_EMAIL,
+            #         recipient_list=[recipient],
+            #         fail_silently=False,
+            #     )
+            msg = EmailMultiAlternatives(
+                subject=subject,
+                body=plain_text,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[settings.DEFAULT_FROM_EMAIL],
+                cc=recipients,
+            )
+            msg.attach_alternative(html_text, "text/html")
+            msg.send()
 
             messages.success(
                 request,
