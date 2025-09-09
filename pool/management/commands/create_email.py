@@ -287,7 +287,7 @@ class Command(BaseCommand):
                     'cumulative_standings'],
             }
         pool_data = trim_full_results_for_llm(last_three_weeks)
-        current_week = pool_data["weeks"][0]["week"]
+        current_week = pool_data["weeks"][0]["week"] - 1
         note_obj = WeeklyNote.objects.filter(week=current_week)
 
         notes = note_obj.values_list('notes', flat=True)
