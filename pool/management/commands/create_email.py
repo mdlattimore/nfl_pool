@@ -1,3 +1,4 @@
+from allauth.account.signals import email_added
 from django.core.management.base import BaseCommand
 from django.db.models import Count
 
@@ -285,14 +286,37 @@ class Command(BaseCommand):
                 'cumulative_standings': trimmed_full_results_package[
                     'cumulative_standings'],
             }
-        prompt_data = trim_full_results_for_llm(last_three_weeks)
+        pool_data = trim_full_results_for_llm(last_three_weeks)
+        current_week = pool_data["weeks"][0]["week"]
+        note_obj = WeeklyNote.objects.filter(week=current_week)
 
-        from pprint import pprint
-        pprint(prompt_data)
-
-        note_obj = WeeklyNote.objects.filter(week=prompt_data["weeks"][0][
-            "week"])
         notes = note_obj.values_list('notes', flat=True)
+        total_input_tokens = 0
+        total_output_tokens = 0
+        total_combined_tokens = 0
+
+        #--------Game Recap Search--------#
+        search_query = (f"2025-26 NFL Week {current_week} game recaps with "
+                        f"player stats")
+
+        game_recaps = client.responses.create(
+            model="gpt-4o-mini",
+            tools=[{"type": "web_search"}],
+            input=search_query,
+        )
+        # Set index if you want to truncate result to feed into next query
+        game_recap_results = game_recaps.output_text ##
+        truncated_game_recap_results = game_recaps.output_text ##
+
+        game_recap_input_tokens = game_recaps.usage.input_tokens ##
+        total_input_tokens += game_recap_input_tokens
+        game_recap_output_tokens = game_recaps.usage.output_tokens ##
+        total_output_tokens += game_recap_output_tokens
+        game_recap_total_tokens = game_recaps.usage.total_tokens ##
+        total_combined_tokens += game_recap_total_tokens
+        #--------------End Game Recap Search------------#
+
+
 
         prompt = f"""
         You are the commissioner of a family/friends NFL pool. Each week, players pick winners of every game and earn points. Results are recorded in JSON ("Results"). 
@@ -301,33 +325,60 @@ class Command(BaseCommand):
         past results, and overall standings. Use a conversational tone. Don't use
         the phrase 'NFL Pool' but rather use natural language (like 
         ‘this week’s games,’ or ‘the pool’) instead of repeating it. Highlight good 
-        performances and trends. Only use information from "Results" or "Notes"; 
-        do not invent anything (no underdogs, close games, or speculation). 
-        Focus on the top players; use first names only. Sign as 'Mark'. Format 
-        in Markdown, applying styles as appropriate for emphasis or note.
+        performances and trends. Only use information from "Results", "Notes", 
+        or "External Data". 
 
-        Tone: Light, witty, humorous
-        Length: Maximum three short paragraphs
+        From "External Data", you must quote or paraphrase at least one **concrete detail** 
+        (e.g., stats, a dramatic play, or a clear outcome) from a game recap. 
+        Keep it brief, but make sure it feels like a real highlight from the NFL week. 
+
+        Focus on the top players; use first names only. Sign as 'Mark'. 
+        Format in Markdown, applying styles as appropriate for emphasis or note.
+
+        Tone: Light, witty, humorous  
+        Length: Maximum three short paragraphs  
 
         Results:
-        {prompt_data}
+        {pool_data}
 
         Notes:
         {notes}
+
+        External Data:
+        {truncated_game_recap_results}
         """
 
-        response = client.responses.create(
+        email_response = client.responses.create(
             model="gpt-4o-mini",
             input=prompt,
             temperature=.5
         )
 
+        email_response_input_tokens = email_response.usage.input_tokens
+        total_input_tokens += email_response_input_tokens
+        email_response_output_tokens = email_response.usage.output_tokens
+        total_output_tokens += email_response_output_tokens
+        email_response_total_tokens = email_response.usage.total_tokens
+        total_combined_tokens = total_input_tokens + total_output_tokens
+
         email = Email(
-            data=prompt_data,
-            text=response.output_text
+            pool_data=pool_data,
+            game_recap_input_tokens=game_recap_input_tokens,
+            game_recap_output_tokens=game_recap_output_tokens,
+            game_recap_total_tokens=game_recap_total_tokens,
+            game_recap_results=game_recap_results,
+            truncated_game_recap_results=truncated_game_recap_results,
+            email_response_input_tokens=email_response_input_tokens,
+            email_response_output_tokens=email_response_output_tokens,
+            email_response_total_tokens=email_response_total_tokens,
+            email_text=email_response.output_text,
+            total_input_tokens=total_input_tokens,
+            total_output_tokens=total_output_tokens,
+            total_combined_tokens=total_combined_tokens,
+
         )
         email.save()
         self.stdout.write(self.style.SUCCESS(
-            response.output_text
+            email_response.output_text
         ))
-        print(response.output_text)
+        print(email_response.output_text)

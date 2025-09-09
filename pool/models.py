@@ -108,9 +108,20 @@ class Score(models.Model):
 
 class Email(models.Model):
     date = models.DateTimeField(auto_now_add=True)
-    data = models.JSONField(null=True, blank=True)
+    pool_data = models.JSONField(null=True, blank=True)
+    game_recap_input_tokens = models.IntegerField(default=0)
+    game_recap_output_tokens = models.IntegerField(default=0)
+    game_recap_total_tokens = models.IntegerField(default=0)
+    game_recap_results = models.TextField(null=True, blank=True)
+    truncated_game_recap_results = models.TextField(null=True, blank=True)
+    email_response_input_tokens = models.IntegerField(default=0)
+    email_response_output_tokens = models.IntegerField(default=0)
+    email_response_total_tokens = models.IntegerField(default=0)
     # text = models.TextField()
-    text = MarkdownxField()
+    email_text = MarkdownxField()
+    total_input_tokens = models.IntegerField(default=0)
+    total_output_tokens = models.IntegerField(default=0)
+    total_combined_tokens = models.IntegerField(default=0)
 
     def __str__(self):
         return f"Email generated {self.date}"
