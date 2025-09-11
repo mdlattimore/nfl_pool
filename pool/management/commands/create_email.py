@@ -296,24 +296,24 @@ class Command(BaseCommand):
         total_combined_tokens = 0
 
         #--------Game Recap Search--------#
-        search_query = (f"2025-26 NFL Week {current_week} game recaps with "
-                        f"player stats")
-
-        game_recaps = client.responses.create(
-            model="gpt-4o-mini",
-            tools=[{"type": "web_search"}],
-            input=search_query,
-        )
-        # Set index if you want to truncate result to feed into next query
-        game_recap_results = game_recaps.output_text ##
-        truncated_game_recap_results = game_recaps.output_text ##
-
-        game_recap_input_tokens = game_recaps.usage.input_tokens ##
-        total_input_tokens += game_recap_input_tokens
-        game_recap_output_tokens = game_recaps.usage.output_tokens ##
-        total_output_tokens += game_recap_output_tokens
-        game_recap_total_tokens = game_recaps.usage.total_tokens ##
-        total_combined_tokens += game_recap_total_tokens
+        # search_query = (f"2025-26 NFL Week {current_week} game recaps with "
+        #                 f"player stats")
+        #
+        # game_recaps = client.responses.create(
+        #     model="gpt-4o-mini",
+        #     tools=[{"type": "web_search"}],
+        #     input=search_query,
+        # )
+        # # Set index if you want to truncate result to feed into next query
+        # game_recap_results = game_recaps.output_text ##
+        # truncated_game_recap_results = game_recaps.output_text ##
+        #
+        # game_recap_input_tokens = game_recaps.usage.input_tokens ##
+        # total_input_tokens += game_recap_input_tokens
+        # game_recap_output_tokens = game_recaps.usage.output_tokens ##
+        # total_output_tokens += game_recap_output_tokens
+        # game_recap_total_tokens = game_recaps.usage.total_tokens ##
+        # total_combined_tokens += game_recap_total_tokens
         #--------------End Game Recap Search------------#
 
 
@@ -372,11 +372,11 @@ class Command(BaseCommand):
 
         email = Email(
             pool_data=pool_data,
-            game_recap_input_tokens=game_recap_input_tokens,
-            game_recap_output_tokens=game_recap_output_tokens,
-            game_recap_total_tokens=game_recap_total_tokens,
-            game_recap_results=game_recap_results,
-            truncated_game_recap_results=truncated_game_recap_results,
+            # game_recap_input_tokens=game_recap_input_tokens,
+            # game_recap_output_tokens=game_recap_output_tokens,
+            # game_recap_total_tokens=game_recap_total_tokens,
+            # game_recap_results=game_recap_results,
+            # truncated_game_recap_results=truncated_game_recap_results,
             email_response_input_tokens=email_response_input_tokens,
             email_response_output_tokens=email_response_output_tokens,
             email_response_total_tokens=email_response_total_tokens,
