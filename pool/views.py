@@ -400,8 +400,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         # all_summaries are displayed.
 
         week_info = get_week_info()
-        print((week_info['week'] == all_summaries[0]['week']) and week_info[
-            'is_pick_open'])
+        # print((week_info['week'] == all_summaries[0]['week']) and week_info[
+        #     'is_pick_open'])
         # if week_info['is_pick_open'] and week_info['week'] == all_summaries[0]['week']:
         #     return all_summaries[1:]
 

@@ -7,7 +7,7 @@ class PickForm(forms.ModelForm):
         queryset=Team.objects.none(),  # Will be overridden in __init__
         widget=forms.RadioSelect,
         empty_label=None,
-        required=True
+        required=False
     )
 
     def __init__(self, *args, **kwargs):
