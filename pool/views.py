@@ -1,5 +1,6 @@
 # pool/views.py
 # Lines 84-88 control enforcement of pick window
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,7 +9,7 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView
-
+from django.core.mail import send_mail
 from pool.forms import PickFormSet
 from pool.models import Game, Pick
 from pool.utils import get_week_info, get_pool_settings
@@ -48,6 +49,8 @@ class PickView(LoginRequiredMixin, View):
         games = self.get_games(week)
         formset = PickFormSet(request.POST, games=games)
 
+
+        pick_list=[]
         if formset.is_valid():
             for form, game in zip(formset.forms, games):
                 picked_team = form.cleaned_data.get('picked_team')
@@ -59,9 +62,11 @@ class PickView(LoginRequiredMixin, View):
                             game=game,
                             defaults={'picked_team': picked_team}
                         )
+                        pick_list.append({'game': game, 'picked_team': picked_team})
+
             messages.success(request, 'Your picks have been saved.')
             print("Adding success message")
-
+            print(pick_list, flush=True)
             return redirect('make_picks', week=week)
         else:
             messages.error(request, "You must make a pick for every game.")
@@ -274,6 +279,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         formset = PickFormSet(request.POST, games=games)
 
         if formset.is_valid():
+            pick_list = []
             for form, game in zip(formset.forms, games):
                 picked_team = form.cleaned_data.get('picked_team')
                 if picked_team and timezone.now() < game.game_time:
@@ -282,7 +288,23 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                         game=game,
                         defaults={'picked_team': picked_team}
                     )
+                    pick_list.append((game, picked_team))
             messages.success(request, 'Your picks have been saved.')
+
+            if "send_email" in request.POST:
+                email_address = request.user.email
+                email_body = ""
+                email_subject = f"Your Week {week} Picks"
+                for pick in pick_list:
+                    email_body += f"{str(pick[0])} ---> {pick[1]}\n"
+                send_mail(
+                    email_subject,
+                    email_body,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [email_address],
+                    fail_silently=False,
+                )
+
         else:
             messages.error(request, "You must make a pick for every game.")
         # Re-render dashboard with messages
