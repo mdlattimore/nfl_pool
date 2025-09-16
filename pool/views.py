@@ -291,12 +291,32 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                     pick_list.append((game, picked_team))
             messages.success(request, 'Your picks have been saved.')
 
+            # if "send_email" in request.POST:
+            #     email_address = request.user.email
+            #     email_body = ""
+            #     email_subject = f"Your Week {week} Picks"
+            #     for pick in pick_list:
+            #         email_body += f"{str(pick[0])} ---> {pick[1]}\n"
+            #     send_mail(
+            #         email_subject,
+            #         email_body,
+            #         settings.DEFAULT_FROM_EMAIL,
+            #         [email_address],
+            #         fail_silently=False,
+            #     )
             if "send_email" in request.POST:
                 email_address = request.user.email
-                email_body = ""
                 email_subject = f"Your Week {week} Picks"
-                for pick in pick_list:
-                    email_body += f"{str(pick[0])} ---> {pick[1]}\n"
+
+                # Always get the latest picks from the DB
+                user_picks = Pick.objects.filter(user=request.user,
+                                                 game__week=week).select_related(
+                    "game")
+
+                email_body = ""
+                for pick in user_picks.order_by("game__game_time"):
+                    email_body += f"{str(pick.game)} ---> {pick.picked_team}\n"
+
                 send_mail(
                     email_subject,
                     email_body,
