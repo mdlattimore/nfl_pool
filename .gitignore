@@ -26,3 +26,7 @@ scratch*
 .env
 
 /notes.txt
+/game_model.json
+/espn_nfl_team_ids.rtf
+/picks.json
+/users.json
