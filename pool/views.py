@@ -124,7 +124,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                                 game__game_time__lt=timezone.now())
             .select_related('game', 'picked_team', 'game__home_team',
                             'game__away_team', 'game__winner')
-            .order_by('game__week', 'game__game_time')
+            .order_by('game__week', 'game__game_time').reverse()
         )
         context['past_picks'] = past_picks
         context['total_points'] = sum(p.total_points for p in past_picks)

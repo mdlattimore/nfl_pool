@@ -101,6 +101,20 @@ td:last-child, th:last-child {
   z-index: 2;
 }
 
+.table-fixed {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.table-fixed th,
+.table-fixed td {
+  width: 20%; /* 5 columns, so 100% / 5 */
+  white-space: nowrap; /* prevent text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* optional: adds "..." if text overflows */
+}
+
+
 .display-3 {
     font-size: 1.75rem;
 }

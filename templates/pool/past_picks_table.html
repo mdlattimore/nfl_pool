@@ -8,35 +8,65 @@
             <h1 class="display-6">All Your Picks</h1>
             <p>Total Season Points: {{ total_points }}</p>
 
-            <table class="table table-hover">
+            {#            <table class="table table-hover">#}
+            {##}
+            {#                <thead>#}
+            {#                <th scope="col"></th>#}
+            {#                <th scope="col">Week</th>#}
+            {#                <th scope="col">Home</th>#}
+            {#                <th scope="col">Away</th>#}
+            {#                <th scope="col">Pick</th>#}
+            {#                <th scope="col">Winner</th>#}
+            {#                <th scope="col">Points</th>#}
+            {#                </thead>#}
+            {#                {% for pick in past_picks %}#}
+            {##}
+            {#                    <tbody>#}
+            {#                    <td></td>#}
+            {#                    <td>{{ pick.game.week }}</td>#}
+            {#                    <td>{{ pick.game.home_team.name }}</td>#}
+            {#                    <td>{{ pick.game.away_team.name }}</td>#}
+            {#                    <td>#}
+            {#                        <span class="{% if pick.game.winner and pick.picked_team == pick.game.winner %}correct{% elif pick.game.winner %}incorrect{% endif %}">#}
+            {#                            {{ pick.picked_team.name }}#}
+            {#                        </span>#}
+            {#                    </td>#}
+            {#                    <td>{{ pick.game.winner }}</td>#}
+            {#                    <td>{{ pick.total_points }}</td>#}
+            {#                    </tbody>#}
+            {#                {% endfor %}#}
+            {##}
+            {#            </table>#}
+            {% regroup past_picks by game.week as picks_by_week %}
 
-                <thead>
-                <th scope="col"></th>
-                <th scope="col">Week</th>
-                <th scope="col">Home</th>
-                <th scope="col">Away</th>
-                <th scope="col">Pick</th>
-                <th scope="col">Winner</th>
-                <th scope="col">Points</th>
-                </thead>
-                {% for pick in past_picks %}
-
+            {% for week_group in picks_by_week %}
+                <h3 class="display-3">Week {{ week_group.grouper }}</h3>
+                <table class="table table-hover table-fixed">
+                    <thead>
+                    <th scope="col">Home</th>
+                    <th scope="col">Away</th>
+                    <th scope="col">Pick</th>
+                    <th scope="col">Winner</th>
+                    <th scope="col">Points</th>
+                    </thead>
                     <tbody>
-                    <td></td>
-                    <td>{{ pick.game.week }}</td>
-                    <td>{{ pick.game.home_team.name }}</td>
-                    <td>{{ pick.game.away_team.name }}</td>
-                    <td>
-                        <span class="{% if pick.game.winner and pick.picked_team == pick.game.winner %}correct{% elif pick.game.winner %}incorrect{% endif %}">
-                            {{ pick.picked_team.name }}
-                        </span>
-                    </td>
-                    <td>{{ pick.game.winner }}</td>
-                    <td>{{ pick.total_points }}</td>
+                    {% for pick in week_group.list %}
+                        <tr>
+                            <td>{{ pick.game.home_team.name }}</td>
+                            <td>{{ pick.game.away_team.name }}</td>
+                            <td>
+                    <span class="{% if pick.game.winner and pick.picked_team == pick.game.winner %}correct{% elif pick.game.winner %}incorrect{% endif %}">
+                        {{ pick.picked_team.name }}
+                    </span>
+                            </td>
+                            <td>{{ pick.game.winner }}</td>
+                            <td>{{ pick.total_points }}</td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
-                {% endfor %}
+                </table>
+            {% endfor %}
 
-            </table>
         </div>
     </div>
 
