@@ -1,0 +1,59 @@
+<br><br>
+<h1 class="display-6 text-center">Division Standings</h1>
+<br>
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col">
+        {% for division, teams in division_standings.items %}
+
+            {% if division.0 == "A" %}
+
+                <h1 class="display-3">{{ division }}</h1>
+                <ol>
+                    {% for team in teams %}
+                        <li>{{ team }} ({{ team.record }})</li>
+                    {% endfor %}
+                </ol>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col">
+        {% for division, teams in division_standings.items %}
+
+            {% if division.0 == "N" %}
+
+                <h1 class="display-3">{{ division }}</h1>
+                <ol>
+                    {% for team in teams %}
+                        <li>{{ team }} ({{ team.record }})</li>
+                    {% endfor %}
+                </ol>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="col-md-2"></div>
+</div>
+<br>
+<hr>
+<h1 class="display-6 text-center">League Standings</h1>
+<br>
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col">
+        <ol>
+            {% for team in league_standings|slice:"0:16" %}
+                <li>{{ team.name }} ({{ team.record }})</li>
+            {% endfor %}
+        </ol>
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col">
+        <ol start="17">
+            {% for team in league_standings|slice:"16:" %}
+                <li>{{ team.name }} ({{ team.record }})</li>
+            {% endfor %}
+        </ol>
+    </div>
+    <div class="col-md-2"></div>
+</div>

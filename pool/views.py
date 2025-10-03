@@ -11,8 +11,9 @@ from django.views import View
 from django.views.generic import TemplateView
 from django.core.mail import send_mail
 from pool.forms import PickFormSet
-from pool.models import Game, Pick
+from pool.models import Game, Pick, Team
 from pool.utils import get_week_info, get_pool_settings
+from itertools import groupby
 
 
 class PickView(LoginRequiredMixin, View):
@@ -139,6 +140,12 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         overall_standings = self.get_overall_standings()
         context['standings'] = overall_standings['standings']
         context['weeks'] = overall_standings['weeks']
+
+        # --- Division Standings ---
+        context['division_standings'] = self.get_division_standings()
+
+        # --- League Standings ---
+        context['league_standings'] = self.get_league_standings()
 
         return context
 
@@ -455,3 +462,28 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             return all_summaries[1:]
 
         return all_summaries
+
+
+    def get_division_standings(self):
+
+        teams = list(Team.objects.all())
+
+        # Sort by conference/division, then by winning percentage, then by name
+        teams.sort(
+            key=lambda t: (t.conference, t.division, -t.winning_percentage,
+                t.name))
+
+        grouped = {
+            division: list(group)
+            for division, group in groupby(teams, key=lambda t: t.division_full)
+        }
+
+        return grouped
+
+    def get_league_standings(self):
+        teams = list(Team.objects.all())
+        teams.sort(
+            key=lambda t: (-t.winning_percentage,)
+        )
+        league_standings = teams
+        return league_standings

@@ -13,7 +13,11 @@
             <a class="nav-link" id="summary-tab" data-bs-toggle="tab" href="#summary" role="tab">Weekly Results</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="standings-tab" data-bs-toggle="tab" href="#standings" role="tab">Season
+            <a class="nav-link" id="standings-tab" data-bs-toggle="tab" href="#standings" role="tab">Pool
+                Standings</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="league-standings-tab" data-bs-toggle="tab" href="#league-standings" role="tab">League
                 Standings</a>
         </li>
     </ul>
@@ -30,6 +34,9 @@
         </div>
         <div class="tab-pane fade" id="standings" role="tabpanel">
             {% include "pool/standings_table.html" %}
+        </div>
+        <div class="tab-pane fade" id="league-standings" role="tabpanel">
+            {% include "pool/league-standings.html" %}
         </div>
     </div>
 

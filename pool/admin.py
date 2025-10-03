@@ -161,9 +161,15 @@ class PoolAdmin(admin.AdminSite):
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ("name",)
+    list_display = ("name", "division_display", "wins", "losses", "ties",
+        "winning_percentage")
     ordering = ("name",)
     search_fields = ("name",)
+    readonly_fields = ("winning_percentage",)
+
+    def division_display(self, obj):
+        return obj.division_display
+    division_display.short_description = "Division"
 
 
 class GameAdminForm(forms.ModelForm):

@@ -1,14 +1,54 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.db.models import TextField
+from django.db.models import (
+    TextField,
+    F,
+    ExpressionWrapper,
+    FloatField,
+    Case,
+    When,
+    Value,
+    Q)
 from markdownx.models import MarkdownxField
 
 User = get_user_model()
 
 
 class Team(models.Model):
+    CONFERENCE_CHOICES = (
+    ("AFC", "AFC"),
+    ("NFC", "NFC"),
+    )
+    DIVISION_CHOICES = (
+    ("North", "North"),
+    ("South", "South"),
+    ("East", "East"),
+    ("West", "West"),
+    )
+
     name = models.CharField(max_length=100)
+    conference = models.CharField(max_length=10, choices=CONFERENCE_CHOICES,
+                                  blank=True, null=True)
+    division = models.CharField(max_length=10, choices=DIVISION_CHOICES, blank=True, null=True)
     alias = models.CharField(max_length=100)
+    wins = models.IntegerField(default=0)
+    losses = models.IntegerField(default=0)
+    ties = models.IntegerField(default=0)
+
+    @property
+    def record(self):
+        return f"{self.wins}-{self.losses}-{self.ties}"
+
+    @property
+    def winning_percentage(self):
+        total = self.wins + self.losses + self.ties
+        if total == 0:
+            return 0.0
+        return (self.wins + 0.5 * self.ties) / total
+
+    @property
+    def division_full(self):
+        return f"{self.conference} {self.division}"
 
     def __str__(self):
         return self.name
@@ -24,30 +64,61 @@ class Game(models.Model):
     winner = models.ForeignKey(Team, null=True, blank=True,
                                related_name="winner",
                                on_delete=models.SET_NULL)
-
+    is_tie = models.BooleanField(default=False)
     points = models.PositiveIntegerField(default=1)
+
+    # def save(self, *args, **kwargs):
+    #     winner_changed = False
+    #     if self.pk:  # existing game
+    #         old = Game.objects.filter(pk=self.pk).first()
+    #         if old and old.winner != self.winner:
+    #             winner_changed = True
+    #
+    #     super().save(*args, **kwargs)  # save game first
+    #
+    #     if winner_changed:
+    #         from .models import Pick
+    #
+    #         if self.winner:
+    #             # Set correct picks
+    #             Pick.objects.filter(game=self, picked_team=self.winner).update(
+    #                 points_earned=self.points)
+    #             # Set incorrect picks
+    #             Pick.objects.filter(game=self).exclude(
+    #                 picked_team=self.winner).update(points_earned=0)
+    #         else:
+    #             # Winner cleared — reset all points
+    #             Pick.objects.filter(game=self).update(points_earned=0)
 
     def save(self, *args, **kwargs):
         winner_changed = False
-        if self.pk:  # existing game
-            old = Game.objects.filter(pk=self.pk).first()
-            if old and old.winner != self.winner:
-                winner_changed = True
+        tie_changed = False
 
+        if self.pk:  # existing game
+            old = Game.objects.get(pk=self.pk).first()
+            if old:
+                if old.winner != self.winner:
+                    winner_changed = True
+                if old.is_tie != self.is_tie:
+                    tie_changed = True
         super().save(*args, **kwargs)  # save game first
 
-        if winner_changed:
+        # ----- Pick Scoring -----
+        if winner_changed or tie_changed:
             from .models import Pick
 
-            if self.winner:
-                # Set correct picks
-                Pick.objects.filter(game=self, picked_team=self.winner).update(
-                    points_earned=self.points)
-                # Set incorrect picks
+            if self.is_tie:
+                # All picks = 0 points
+                Pick.objects.filter(game=self).update(points_earned=0)
+            elif self.winner:
+                # Correct picks
+                Pick.objects.filter(game=self, picked_team=self.winner).update(points_earned=self.points)
+                # Incorrect picks
                 Pick.objects.filter(game=self).exclude(
-                    picked_team=self.winner).update(points_earned=0)
+                    picked_team=self.winner
+                ).update(points_earned=0)
             else:
-                # Winner cleared — reset all points
+                # Undecided -- reset all points
                 Pick.objects.filter(game=self).update(points_earned=0)
 
     def __str__(self):
