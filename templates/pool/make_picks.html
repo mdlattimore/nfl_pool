@@ -30,8 +30,8 @@
             <tbody>
             {% for form, game in formset.forms|_zip:games %}
                 <tr>
-                    <td>{{ game.home_team.name }}</td>
-                    <td>{{ game.away_team.name }}</td>
+                    <td>{{ game.home_team.name }} ({{ game.home_team.record }})</td>
+                    <td>{{ game.away_team.name }} ({{ game.away_team.record }})</td>
                     <td>{{ form.picked_team|disable_if_closed:is_pick_open }}</td>
 
                 </tr>
