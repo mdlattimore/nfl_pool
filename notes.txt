@@ -2,3 +2,7 @@ fly ssh sftp get [path/to/remote/file] [path/to/local/save] (eg, /Users/mark/Dow
 
 e.g.
 fly ssh sftp get pick_audit_20250826.csv /Users/mark/Downloads/pick_audit.csv
+
+
+
+Change pick window: pool/utils.py line 24
