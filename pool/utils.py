@@ -21,11 +21,11 @@ def get_week_info():
     # Pick window -- correct value: timedelta(days=2)
     pick_open = week_start
     pick_close = eastern.localize(
-        # Close pick window at 7pm Eastern on Thursday -- Normal
-        # datetime.combine(last_tuesday_date + timedelta(days=2), time(19, 0))
+        # Close pick window at 8pm Eastern on Thursday -- Normal
+        datetime.combine(last_tuesday_date + timedelta(days=2), time(20, 0))
 
         # close pick window at 1pm on Thursday (Thanksgiving Day)
-        datetime.combine(last_tuesday_date + timedelta(days=2), time(13, 0))
+        # datetime.combine(last_tuesday_date + timedelta(days=2), time(13, 0))
 
     ).astimezone(dt_timezone.utc)
 
