@@ -22,10 +22,10 @@ def get_week_info():
     pick_open = week_start
     pick_close = eastern.localize(
         # Close pick window at 8pm Eastern on Thursday -- Normal
-        datetime.combine(last_tuesday_date + timedelta(days=2), time(13, 0))
-
-        # close pick window at 1pm on Thursday (Thanksgiving Day)
         # datetime.combine(last_tuesday_date + timedelta(days=2), time(13, 0))
+
+        # close pick window at 4pm on Saturday (Week 18)
+        datetime.combine(last_tuesday_date + timedelta(days=4), time(16, 0))
 
     ).astimezone(dt_timezone.utc)
 
