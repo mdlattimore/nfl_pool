@@ -154,8 +154,12 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         )
 
     def get_overall_standings(self):
-        UNIQUE_BONUS = 2  # keep in sync with your rules
-        PERFECT_WEEK_BONUS = 3
+        # UNIQUE_BONUS = 2  # keep in sync with your rules
+        # PERFECT_WEEK_BONUS = 3
+
+        # Playoffs -- no bonuses
+        UNIQUE_BONUS = 0  # keep in sync with your rules
+        PERFECT_WEEK_BONUS = 0
 
         User = get_user_model()
         users = list(User.objects.all())
@@ -395,7 +399,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                         wins += 1
 
                     # Unique bonus (only if pick is correct and unique)
-                    unique_bonus = 2 if (pick.game_id,
+                    # unique_bonus = 2 if (pick.game_id,
+                    #     pick.picked_team_id) in unique_set and base > 0 else 0
+
+                    # Playoffs - No bonuses
+                    unique_bonus = 0 if (pick.game_id,
                         pick.picked_team_id) in unique_set and base > 0 else 0
 
                     # Update Pick.bonus_points if it differs
