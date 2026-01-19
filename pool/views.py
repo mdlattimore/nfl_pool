@@ -414,7 +414,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                     earned_points += base + unique_bonus
 
                 # Perfect week bonus
-                perfect_week_bonus = 3 if wins and wins == len(games) else 0
+                # perfect_week_bonus = 3 if wins and wins == len(games) else 0
+
+                # Playoffs - No bonuses
+                perfect_week_bonus = 0 if wins and wins == len(games) else 0
+
                 earned_points += perfect_week_bonus
 
                 week_summary.append({
