@@ -25,7 +25,7 @@ def get_week_info():
         # datetime.combine(last_tuesday_date + timedelta(days=2), time(13, 0))
 
         # close pick window at 4pm on Saturday (Week 18)
-        datetime.combine(last_tuesday_date + timedelta(days=4), time(16, 0))
+        datetime.combine(last_tuesday_date + timedelta(days=5), time(14, 30))
 
     ).astimezone(dt_timezone.utc)
 
