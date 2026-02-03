@@ -24,8 +24,8 @@ def get_week_info():
         # Close pick window at 8pm Eastern on Thursday -- Normal
         # datetime.combine(last_tuesday_date + timedelta(days=2), time(13, 0))
 
-        # close pick window at 4pm on Saturday (Week 18)
-        datetime.combine(last_tuesday_date + timedelta(days=5), time(14, 30))
+        # close pick window at 6pm on Sunday (Superbowl)
+        datetime.combine(last_tuesday_date + timedelta(days=5), time(18, 00))
 
     ).astimezone(dt_timezone.utc)
 
