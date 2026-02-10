@@ -11,8 +11,9 @@ urlpatterns = [
          name="account_change_password"),
     path('markdownx/', include('markdownx.urls')),
     path("accounts/", include("allauth.urls")),
-    path("", include("pool.urls")),
-    # path("pool/", include("pool.urls")),
+    # Disabling to make home a generic home page in the off season
+    # path("", include("pool.urls")),
+    path("", include("pages.urls")),
     path("pooladmin/", pool_admin_site.urls),  # <- important
 
 ]
